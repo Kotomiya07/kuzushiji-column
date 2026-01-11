@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>くずし字列分割アノテーションツール</title>
+    <meta name="description" content="日本古典籍くずし字データセットの列分割アノテーションツール">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1 class="header__title">くずし字列分割アノテーションツール</h1>
+            <div class="header__controls">
+                <div class="control-group">
+                    <label for="book-select">書籍:</label>
+                    <select id="book-select" class="select">
+                        <option value="">読み込み中...</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="page-select">ページ:</label>
+                    <select id="page-select" class="select">
+                        <option value="">書籍を選択</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <!-- ツールバー -->
+        <div class="toolbar">
+            <div class="toolbar__left">
+                <button id="btn-prev" class="btn btn--secondary" title="前のページ (←)">
+                    <span class="btn__icon">←</span> 前
+                </button>
+                <button id="btn-next" class="btn btn--secondary" title="次のページ (→)">
+                    次 <span class="btn__icon">→</span>
+                </button>
+            </div>
+            <div class="toolbar__center">
+                <label class="toggle" title="ページ読み込み時に自動で列を推定">
+                    <input type="checkbox" id="auto-toggle" checked>
+                    <span class="toggle__slider"></span>
+                    <span class="toggle__label">Auto</span>
+                </label>
+                <button id="btn-undo" class="btn btn--outline" title="元に戻す (Z)" disabled>
+                    <span class="btn__icon">↩</span> Undo
+                </button>
+                <button id="btn-redo" class="btn btn--outline" title="やり直し (Y)" disabled>
+                    <span class="btn__icon">↪</span> Redo
+                </button>
+            </div>
+            <div class="toolbar__right">
+                <button id="btn-save" class="btn btn--primary" title="保存 (S)">
+                    <span class="btn__icon">💾</span> 保存
+                </button>
+                <button id="btn-help" class="btn btn--outline" title="ヘルプ (H)">
+                    <span class="btn__icon">?</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- メインコンテンツ -->
+        <main class="main">
+            <div class="canvas-container">
+                <canvas id="annotation-canvas"></canvas>
+                <div id="loading" class="loading">
+                    <div class="loading__spinner"></div>
+                    <div class="loading__text">読み込み中...</div>
+                </div>
+                <!-- トースト通知 -->
+                <div id="toast" class="toast hidden"></div>
+            </div>
+        </main>
+
+        <!-- ステータスバー -->
+        <footer class="statusbar">
+            <div class="statusbar__item">
+                <span class="statusbar__label">列数:</span>
+                <span id="status-columns" class="statusbar__value">0</span>
+            </div>
+            <div class="statusbar__item">
+                <span class="statusbar__label">現在:</span>
+                <span id="status-current" class="statusbar__value">-</span>
+            </div>
+            <div class="statusbar__item">
+                <span class="statusbar__label">未分割:</span>
+                <span id="status-remaining" class="statusbar__value">0</span>
+            </div>
+            <div class="statusbar__item statusbar__hint">
+                <span>↑↓: 選択移動 | Enter: 列確定（最後の文字で全確定） | ←→: ページ移動</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 保存確認ダイアログ -->
+    <dialog id="save-dialog" class="dialog">
+        <div class="dialog__content">
+            <h2 class="dialog__title">変更を保存しますか？</h2>
+            <p class="dialog__text">現在のページに未保存の変更があります。</p>
+            <div class="dialog__actions">
+                <button id="dialog-cancel" class="btn btn--outline">キャンセル</button>
+                <button id="dialog-discard" class="btn btn--secondary">保存しない</button>
+                <button id="dialog-save" class="btn btn--primary">保存する</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- ヘルプダイアログ -->
+    <dialog id="help-dialog" class="dialog dialog--wide">
+        <div class="dialog__content">
+            <div class="dialog__header">
+                <h2 class="dialog__title">くずし字列分割アノテーションツール</h2>
+                <button id="help-close" class="dialog__close" title="閉じる">&times;</button>
+            </div>
+            
+            <div class="help-content">
+                <section class="help-section">
+                    <h3>概要</h3>
+                    <p>日本古典籍くずし字データセットの列分割アノテーションを行うツールです。各文字のbboxを列単位でグループ化し、列画像とCSVアノテーションを出力します。</p>
+                </section>
+
+                <section class="help-section">
+                    <h3>基本操作</h3>
+                    <ol>
+                        <li>書籍とページを選択（起動時は自動で最初のページを表示）</li>
+                        <li>↓キーで列の最後の文字まで移動</li>
+                        <li>次の列の先頭文字でEnterキー → 直前までが列として確定</li>
+                        <li>最後の列は、最後の文字でEnterキー → 残り全部が確定</li>
+                        <li>Sキーで保存 → CSVと列画像を出力</li>
+                    </ol>
+                </section>
+
+                <section class="help-section">
+                    <h3>キーボードショートカット</h3>
+                    <table class="help-table">
+                        <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>文字選択を移動</td></tr>
+                        <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>前後のページへ移動</td></tr>
+                        <tr><td><kbd>Enter</kbd></td><td>列を確定（選択した文字から新しい列開始）</td></tr>
+                        <tr><td><kbd>Z</kbd></td><td>元に戻す (Undo)</td></tr>
+                        <tr><td><kbd>Y</kbd></td><td>やり直し (Redo)</td></tr>
+                        <tr><td><kbd>S</kbd></td><td>保存</td></tr>
+                        <tr><td><kbd>H</kbd></td><td>このヘルプを表示</td></tr>
+                        <tr><td><kbd>N</kbd></td><td>選択文字を未分割に戻す</td></tr>
+                    </table>
+                </section>
+
+                <section class="help-section">
+                    <h3>表示の見方</h3>
+                    <ul class="help-legend">
+                        <li><span class="legend-box legend--default"></span>未割り当ての文字</li>
+                        <li><span class="legend-box legend--selected"></span>選択中の文字</li>
+                        <li><span class="legend-box legend--confirmed"></span>確定済みの列（色で区別）</li>
+                        <li><span class="legend-line"></span>Char ID順の重心線</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>Autoモード</h3>
+                    <p>ONにすると、既存のアノテーションがないページを開いた時に、X座標に基づいて自動で列を推定します。推定結果を修正してから保存できます。</p>
+                </section>
+
+                <section class="help-section">
+                    <h3>出力ファイル</h3>
+                    <ul>
+                        <li><code>output/{book_id}/column_annotation.csv</code> - 列アノテーションCSV</li>
+                        <li><code>output/{book_id}/columns/{page_id}_col0001.jpg</code> - 列画像</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

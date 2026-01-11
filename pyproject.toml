@@ -1,0 +1,14 @@
+[project]
+name = "kuzushiji-column"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.128.0",
+    "jinja2>=3.1.6",
+    "pandas>=2.3.3",
+    "pillow>=12.1.0",
+    "python-multipart>=0.0.21",
+    "uvicorn>=0.40.0",
+]
