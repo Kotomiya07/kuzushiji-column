@@ -29,9 +29,15 @@ const state = {
     // 描画
     scale: 1,
     image: null,
+    pixelRatio: 1,
+    displayWidth: 0,
+    displayHeight: 0,
     
     // ナビゲーション中フラグ（連続キー入力防止）
     isNavigating: false,
+    
+    // 元のアノテーション有無（DBに保存済みだったか）
+    hasOriginalAnnotations: false,
 };
 
 // ===== 色の定義 =====
@@ -74,6 +80,7 @@ const elements = {
     btnUndo: document.getElementById('btn-undo'),
     btnRedo: document.getElementById('btn-redo'),
     btnSave: document.getElementById('btn-save'),
+    btnClear: document.getElementById('btn-clear'),
     statusColumns: document.getElementById('status-columns'),
     statusCurrent: document.getElementById('status-current'),
     statusRemaining: document.getElementById('status-remaining'),
@@ -126,26 +133,50 @@ async function loadBooks() {
         elements.bookSelect.innerHTML = '<option value="">書籍を選択...</option>';
         data.books.forEach(book => {
             const option = document.createElement('option');
-            option.value = book;
-            option.textContent = book;
+            option.value = book.book_id;
+            option.textContent = `${book.book_id} (${book.progress}%)`;
             elements.bookSelect.appendChild(option);
         });
         
         // 起動時に最初の書籍を自動で開く
         if (data.books.length > 0) {
-            const firstBookId = data.books[0];
-            elements.bookSelect.value = firstBookId;
-            await loadPages(firstBookId);
+            const firstBook = data.books[0];
+            elements.bookSelect.value = firstBook.book_id;
+            await loadPages(firstBook.book_id);
             
             // アノテーション済みページがあればその最後を、なければ最初のページを開く
             if (state.pages.length > 0) {
                 const targetPageId = state.lastAnnotated || state.pages[0];
                 elements.pageSelect.value = targetPageId;
-                await loadPageData(firstBookId, targetPageId);
+                await loadPageData(firstBook.book_id, targetPageId);
             }
         }
     } catch (error) {
         console.error('書籍一覧の取得に失敗:', error);
+    }
+}
+
+async function updateBookProgress() {
+    // 現在選択中の書籍の進捗率を更新
+    try {
+        const res = await fetch('/api/books');
+        const data = await res.json();
+        
+        // 現在選択中の書籍のoptionを更新
+        const currentBookId = state.bookId;
+        const book = data.books.find(b => b.book_id === currentBookId);
+        
+        if (book) {
+            const options = elements.bookSelect.options;
+            for (let i = 0; i < options.length; i++) {
+                if (options[i].value === currentBookId) {
+                    options[i].textContent = `${book.book_id} (${book.progress}%)`;
+                    break;
+                }
+            }
+        }
+    } catch (error) {
+        console.error('進捗率の更新に失敗:', error);
     }
 }
 
@@ -191,10 +222,17 @@ async function loadPageData(bookId, pageId) {
         // 既存のアノテーションから列を復元
         restoreColumnsFromAnnotations();
         
-        // 既存のアノテーションがなく、Autoモードが有効なら自動列推定
+        // DBに元のアノテーションがあったかを記録
         const hasExistingAnnotations = state.columns.length > 0;
+        state.hasOriginalAnnotations = hasExistingAnnotations;
         if (!hasExistingAnnotations && elements.autoToggle.checked) {
             autoEstimateColumns();
+        }
+
+        // 未分割に挟まれた文字を未分割に戻す
+        const sandwichedRemoved = applySandwichedUnassign();
+        if (sandwichedRemoved) {
+            sortColumns();
         }
         
         // 選択をリセット（最初の未分割文字、またはなければ最初の文字）
@@ -208,7 +246,7 @@ async function loadPageData(bookId, pageId) {
         state.historyIndex = 0;
         
         // Auto分割した場合はdirtyとしてマーク（保存確認を出すため）
-        state.isDirty = !hasExistingAnnotations && elements.autoToggle.checked && state.columns.length > 0;
+        state.isDirty = (!hasExistingAnnotations && elements.autoToggle.checked && state.columns.length > 0) || sandwichedRemoved;
         
         // 描画
         calculateScale();
@@ -237,6 +275,13 @@ async function saveAnnotations() {
         showToast('保存する列がありません', true);
         return;
     }
+
+    const assigned = new Set(state.columns.flat());
+    const remaining = state.characters.length - assigned.size;
+    if (remaining > 0) {
+        window.alert(`未分割の文字が${remaining}件あります。すべて分割してから保存してください。`);
+        return;
+    }
     
     showLoading(true);
     
@@ -260,6 +305,8 @@ async function saveAnnotations() {
         if (result.success) {
             state.isDirty = false;
             showToast(result.message);
+            updateButtons();
+            await updateBookProgress();
         } else {
             showToast('保存に失敗しました', true);
         }
@@ -291,6 +338,12 @@ function restoreColumnsFromAnnotations() {
     sortedIds.forEach(colId => {
         state.columns.push(columnMap.get(colId));
     });
+}
+
+function hasUnassignedCharacters() {
+    // 未分割の文字があるかどうかを判定
+    const assigned = new Set(state.columns.flat());
+    return state.characters.some((_, i) => !assigned.has(i));
 }
 
 function autoEstimateColumns() {
@@ -409,31 +462,82 @@ function sortColumns() {
     });
 }
 
-function unassignCharacter() {
-    const selectedIdx = state.selectedIndex;
-    const colIdx = getCharacterColumnIndex(selectedIdx);
+function removeCharacterFromColumns(charIndex) {
+    const colIdx = getCharacterColumnIndex(charIndex);
+    if (colIdx === -1) return false;
     
-    if (colIdx === -1) return; // Already unassigned
-    
-    // Remove from column
     const col = state.columns[colIdx];
-    const posInCol = col.indexOf(selectedIdx);
+    const posInCol = col.indexOf(charIndex);
+    if (posInCol === -1) return false;
     
-    if (posInCol !== -1) {
-        col.splice(posInCol, 1);
+    col.splice(posInCol, 1);
+    if (col.length === 0) {
+        state.columns.splice(colIdx, 1);
+    }
+    return true;
+}
+
+function applySandwichedUnassign() {
+    if (state.characters.length < 3) return false;
+    
+    const assigned = new Set(state.columns.flat());
+    const assignedFlags = state.characters.map((_, idx) => assigned.has(idx));
+    const targets = [];
+    
+    let i = 0;
+    while (i < assignedFlags.length) {
+        const isAssigned = assignedFlags[i];
+        const start = i;
         
-        // Remove empty columns
-        if (col.length === 0) {
-            state.columns.splice(colIdx, 1);
+        while (i < assignedFlags.length && assignedFlags[i] === isAssigned) {
+            i++;
         }
         
-        state.isDirty = true;
-        sortColumns();
-        saveHistory();
-        draw();
-        updateStatus();
-        updateButtons();
+        const end = i - 1;
+        if (!isAssigned) {
+            continue;
+        }
+        
+        const hasUnassignedBefore = start > 0 && !assignedFlags[start - 1];
+        const hasUnassignedAfter = end < assignedFlags.length - 1 && !assignedFlags[end + 1];
+        
+        if (hasUnassignedBefore && hasUnassignedAfter) {
+            for (let j = start; j <= end; j++) {
+                targets.push(j);
+            }
+        }
     }
+    
+    if (targets.length === 0) return false;
+    
+    targets.forEach((idx) => removeCharacterFromColumns(idx));
+    return true;
+}
+
+function unassignCharacter() {
+    const selectedIdx = state.selectedIndex;
+    const removed = removeCharacterFromColumns(selectedIdx);
+    if (!removed) return; // Already unassigned
+    
+    applySandwichedUnassign();
+    
+    state.isDirty = true;
+    sortColumns();
+    saveHistory();
+    draw();
+    updateStatus();
+    updateButtons();
+}
+
+function clearAllAssignments() {
+    if (state.columns.length === 0) return;
+    
+    state.columns = [];
+    state.isDirty = true;
+    saveHistory();
+    draw();
+    updateStatus();
+    updateButtons();
 }
 
 function splitColumn() {
@@ -505,6 +609,13 @@ function splitColumn() {
             }
         }
     }
+
+    const sandwichedRemoved = applySandwichedUnassign();
+    if (sandwichedRemoved) {
+        state.isDirty = true;
+        sortColumns();
+        saveHistory();
+    }
     
     draw();
     updateStatus();
@@ -568,8 +679,8 @@ function redo() {
 // ===== 描画 =====
 function calculateScale() {
     const container = elements.canvas.parentElement;
-    const maxWidth = container.clientWidth - 40;
-    const maxHeight = container.clientHeight - 40;
+    const maxWidth = container.clientWidth;
+    const maxHeight = container.clientHeight;
     
     const scaleX = maxWidth / state.imageWidth;
     const scaleY = maxHeight / state.imageHeight;
@@ -577,8 +688,17 @@ function calculateScale() {
     // 画面に収まるようにスケールを調整（上限なし）
     state.scale = Math.min(scaleX, scaleY);
     
-    elements.canvas.width = state.imageWidth * state.scale;
-    elements.canvas.height = state.imageHeight * state.scale;
+    state.displayWidth = state.imageWidth * state.scale;
+    state.displayHeight = state.imageHeight * state.scale;
+
+    state.pixelRatio = window.devicePixelRatio || 1;
+    elements.canvas.style.width = `${state.displayWidth}px`;
+    elements.canvas.style.height = `${state.displayHeight}px`;
+    elements.canvas.width = Math.round(state.displayWidth * state.pixelRatio);
+    elements.canvas.height = Math.round(state.displayHeight * state.pixelRatio);
+    ctx.setTransform(state.pixelRatio, 0, 0, state.pixelRatio, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 }
 
 function draw() {
@@ -587,7 +707,7 @@ function draw() {
     const { scale } = state;
     
     // 画像を描画
-    ctx.drawImage(state.image, 0, 0, elements.canvas.width, elements.canvas.height);
+    ctx.drawImage(state.image, 0, 0, state.displayWidth, state.displayHeight);
     
     // 確定済み列のbboxを描画（列全体を囲む）
     state.columns.forEach((col, colIdx) => {
@@ -733,6 +853,13 @@ function updateButtons() {
     const currentPageIndex = state.pages.indexOf(state.pageId);
     elements.btnPrev.disabled = currentPageIndex <= 0;
     elements.btnNext.disabled = currentPageIndex >= state.pages.length - 1;
+    
+    // 保存ボタンのハイライト（isDirtyがtrueの時のみハイライト）
+    if (state.isDirty) {
+        elements.btnSave.classList.remove('btn--muted');
+    } else {
+        elements.btnSave.classList.add('btn--muted');
+    }
 }
 
 function showLoading(show) {
@@ -839,12 +966,39 @@ function setupEventListeners() {
         }
     });
     
+    // Autoトグル
+    elements.autoToggle.addEventListener('change', () => {
+        if (elements.autoToggle.checked) {
+            // Auto ON: 未分割文字があれば自動推定を実行
+            if (hasUnassignedCharacters()) {
+                autoEstimateColumns();
+                if (state.columns.length > 0) {
+                    state.isDirty = true;
+                }
+                saveHistory();
+            }
+        } else {
+            // Auto OFF: 確認なしで列をクリア（DBに元のアノテーションがない場合のみ）
+            if (!state.hasOriginalAnnotations) {
+                state.columns = [];
+                state.isDirty = false;
+                state.history = [{ columns: [], selectedIndex: state.selectedIndex }];
+                state.historyIndex = 0;
+            }
+            // DBに元のアノテーションがある場合は何もしない（既存のアノテーションを維持）
+        }
+        draw();
+        updateStatus();
+        updateButtons();
+    });
+    
     // ボタン
     elements.btnPrev.addEventListener('click', () => navigatePage(-1));
     elements.btnNext.addEventListener('click', () => navigatePage(1));
     elements.btnUndo.addEventListener('click', undo);
     elements.btnRedo.addEventListener('click', redo);
     elements.btnSave.addEventListener('click', saveAnnotations);
+    elements.btnClear.addEventListener('click', clearAllAssignments);
     elements.btnHelp.addEventListener('click', showHelp);
     elements.helpClose.addEventListener('click', () => elements.helpDialog.close());
     
@@ -866,6 +1020,12 @@ function setupEventListeners() {
 function handleKeydown(e) {
     // フォーカスがselect等にある場合は無視
     if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+
+    if (e.shiftKey && e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        clearAllAssignments();
+        return;
+    }
     
     switch (e.key) {
         case 'ArrowUp':
@@ -924,6 +1084,13 @@ function handleKeydown(e) {
         case 'n':
             e.preventDefault();
             unassignCharacter();
+            break;
+            
+        case 'a':
+            e.preventDefault();
+            // Autoトグルを切り替え（changeイベントを発火させる）
+            elements.autoToggle.checked = !elements.autoToggle.checked;
+            elements.autoToggle.dispatchEvent(new Event('change'));
             break;
     }
 }

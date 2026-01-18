@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>くずし字列分割アノテーションツール</title>
     <meta name="description" content="日本古典籍くずし字データセットの列分割アノテーションツール">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@
                 </button>
             </div>
             <div class="toolbar__center">
-                <label class="toggle" title="ページ読み込み時に自動で列を推定">
+                <label class="toggle" title="自動列推定 ON/OFF (A)">
                     <input type="checkbox" id="auto-toggle" checked>
                     <span class="toggle__slider"></span>
                     <span class="toggle__label">Auto</span>
@@ -55,8 +55,11 @@
                 </button>
             </div>
             <div class="toolbar__right">
-                <button id="btn-save" class="btn btn--primary" title="保存 (S)">
+                <button id="btn-save" class="btn btn--primary btn--muted" title="保存 (S)">
                     <span class="btn__icon">💾</span> 保存
+                </button>
+                <button id="btn-clear" class="btn btn--outline" title="全解除 (Shift+N)">
+                    <span class="btn__icon">🧹</span> 全解除
                 </button>
                 <button id="btn-help" class="btn btn--outline" title="ヘルプ (H)">
                     <span class="btn__icon">?</span>
@@ -146,6 +149,8 @@
                         <tr><td><kbd>S</kbd></td><td>保存</td></tr>
                         <tr><td><kbd>H</kbd></td><td>このヘルプを表示</td></tr>
                         <tr><td><kbd>N</kbd></td><td>選択文字を未分割に戻す</td></tr>
+                        <tr><td><kbd>Shift</kbd> + <kbd>N</kbd></td><td>全解除（全て未分割に戻す）</td></tr>
+                        <tr><td><kbd>A</kbd></td><td>Autoモード ON/OFF 切り替え</td></tr>
                     </table>
                 </section>
 
@@ -175,6 +180,6 @@
         </div>
     </dialog>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=4"></script>
 </body>
 </html>

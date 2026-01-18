@@ -5,8 +5,9 @@
 from pathlib import Path
 from typing import Optional
 
+import csv
 import pandas as pd
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -16,6 +17,7 @@ from pydantic import BaseModel
 # ===== 設定 =====
 RAW_DIR = Path("raw")
 OUTPUT_DIR = Path("output")
+INDEX_FILENAME = "column_annotation.index"
 
 app = FastAPI(title="くずし字列分割アノテーションツール")
 
@@ -126,6 +128,33 @@ def load_existing_annotations(book_id: str, page_id: str) -> dict[str, str]:
     return result
 
 
+def load_page_index(book_id: str) -> set[str]:
+    """アノテーション済みページのインデックスを読み込み（なければ生成）"""
+    output_book_dir = OUTPUT_DIR / book_id
+    index_path = output_book_dir / INDEX_FILENAME
+    output_csv = output_book_dir / "column_annotation.csv"
+
+    if index_path.exists():
+        return {line.strip() for line in index_path.read_text().splitlines() if line.strip()}
+
+    if not output_csv.exists():
+        return set()
+
+    pages = set()
+    with output_csv.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            image_name = row.get("Image")
+            if image_name:
+                pages.add(image_name)
+
+    if pages:
+        output_book_dir.mkdir(parents=True, exist_ok=True)
+        index_path.write_text("\n".join(sorted(pages)) + "\n", encoding="utf-8")
+
+    return pages
+
+
 def get_image_path(book_id: str, page_id: str) -> Path:
     """画像パスを取得（page_idはImage列の値）"""
     return RAW_DIR / book_id / "images" / f"{page_id}.jpg"
@@ -140,9 +169,45 @@ async def index(request: Request):
 
 @app.get("/api/books")
 async def get_books():
-    """書籍一覧を取得"""
+    """書籍一覧を取得（進捗率付き）"""
     books = get_book_dirs()
-    return {"books": books}
+    
+    result = []
+    for book_id in books:
+        # 総ページ数を取得
+        pages = get_page_ids(book_id)
+        total_pages = len(pages)
+        
+        # アノテーション済みページ数を取得
+        annotated_count = 0
+        output_csv = OUTPUT_DIR / book_id / "column_annotation.csv"
+        index_path = OUTPUT_DIR / book_id / INDEX_FILENAME
+        if index_path.exists():
+            annotated_images = {
+                line.strip() for line in index_path.read_text().splitlines() if line.strip()
+            }
+            for img_name in annotated_images:
+                if img_name in pages:
+                    annotated_count += 1
+        elif output_csv.exists():
+            ann_df = pd.read_csv(output_csv)
+            if "Column ID" in ann_df.columns:
+                annotated_images = ann_df[ann_df["Column ID"].notna()]["Image"].unique()
+                for img_name in annotated_images:
+                    if img_name in pages:
+                        annotated_count += 1
+        
+        # 進捗率を計算
+        progress = round(annotated_count / total_pages * 100) if total_pages > 0 else 0
+        
+        result.append({
+            "book_id": book_id,
+            "total_pages": total_pages,
+            "annotated_count": annotated_count,
+            "progress": progress,
+        })
+    
+    return {"books": result}
 
 
 @app.get("/api/books/{book_id}/pages")
@@ -155,7 +220,15 @@ async def get_pages(book_id: str):
     # 列アノテーション済みのページを取得
     annotated_pages = []
     output_csv = OUTPUT_DIR / book_id / "column_annotation.csv"
-    if output_csv.exists():
+    index_path = OUTPUT_DIR / book_id / INDEX_FILENAME
+    if index_path.exists():
+        annotated_images = [
+            line.strip() for line in index_path.read_text().splitlines() if line.strip()
+        ]
+        for img_name in annotated_images:
+            if img_name in pages:
+                annotated_pages.append(img_name)
+    elif output_csv.exists():
         ann_df = pd.read_csv(output_csv)
         if "Column ID" in ann_df.columns:
             # Column IDが設定されているページを取得
@@ -238,65 +311,36 @@ async def get_page_image(book_id: str, page_id: str):
     return FileResponse(image_path, media_type="image/jpeg")
 
 
-@app.post("/api/books/{book_id}/pages/{page_id}/save")
-async def save_annotations(book_id: str, page_id: str, request: SaveRequest):
-    """アノテーションを保存し、列画像を生成"""
-    # 出力ディレクトリ作成
-    output_book_dir = OUTPUT_DIR / book_id
-    columns_dir = output_book_dir / "columns"
+def generate_column_images(
+    book_id: str,
+    page_id: str,
+    columns: list[list[str]],
+) -> None:
+    """列画像を生成（バックグラウンド実行）"""
+    columns_dir = OUTPUT_DIR / book_id / "columns"
     columns_dir.mkdir(parents=True, exist_ok=True)
 
-    # 元の座標CSVを読み込み
-    df = load_coordinate_csv(book_id)
-    # page_idはImage列の値そのもの
-    image_name = page_id
-
-    # Column IDを追加（既存のColumn ID列があれば更新）
-    if "Column ID" not in df.columns:
-        df["Column ID"] = None
-
-    # 現在のページのColumn IDをクリア
-    df.loc[df["Image"] == image_name, "Column ID"] = None
-
-    # 列ごとにColumn IDを設定
-    for col_idx, column in enumerate(request.columns, start=1):
-        column_id = f"COL{col_idx:04d}"
-        for char_id in column.char_ids:
-            mask = (df["Image"] == image_name) & (df["Char ID"] == char_id)
-            df.loc[mask, "Column ID"] = column_id
-
-    # CSVを保存
-    output_csv = output_book_dir / "column_annotation.csv"
-
-    # 既存のCSVがあれば、他のページのデータを保持
-    if output_csv.exists():
-        existing_df = pd.read_csv(output_csv)
-        # 現在のページ以外のデータを保持
-        other_pages_df = existing_df[existing_df["Image"] != image_name]
-        # 現在のページのデータ
-        current_page_df = df[df["Image"] == image_name]
-        # マージ
-        final_df = pd.concat([other_pages_df, current_page_df], ignore_index=True)
-    else:
-        final_df = df[df["Image"] == image_name]
-
-    final_df.to_csv(output_csv, index=False)
-
-    # 列画像を生成
     image_path = get_image_path(book_id, page_id)
+    if not image_path.exists():
+        return
+
+    df = load_coordinate_csv(book_id)
+    page_df = df[df["Image"] == page_id]
+    if page_df.empty:
+        return
+
     padding = 10  # 周囲に追加するパディング（ピクセル）
-    
+
     # 既存のこのページの列画像を削除
     for old_file in columns_dir.glob(f"{page_id}_col*.jpg"):
         old_file.unlink()
-    
+
     with Image.open(image_path) as img:
         img_width, img_height = img.size
-        page_df = df[df["Image"] == image_name]
 
-        for col_idx, column in enumerate(request.columns, start=1):
+        for col_idx, char_ids in enumerate(columns, start=1):
             # 列に含まれる文字のbboxを取得
-            col_chars = page_df[page_df["Char ID"].isin(column.char_ids)]
+            col_chars = page_df[page_df["Char ID"].isin(char_ids)]
             if col_chars.empty:
                 continue
 
@@ -317,9 +361,89 @@ async def save_annotations(book_id: str, page_id: str, request: SaveRequest):
             column_path = columns_dir / f"{page_id}_col{col_idx:04d}.jpg"
             column_img.save(column_path, "JPEG", quality=95)
 
+
+@app.post("/api/books/{book_id}/pages/{page_id}/save")
+async def save_annotations(
+    book_id: str,
+    page_id: str,
+    request: SaveRequest,
+    background_tasks: BackgroundTasks,
+):
+    """アノテーションを保存し、列画像を生成"""
+    # 出力ディレクトリ作成
+    output_book_dir = OUTPUT_DIR / book_id
+    columns_dir = output_book_dir / "columns"
+    columns_dir.mkdir(parents=True, exist_ok=True)
+
+    # 元の座標CSVを読み込み
+    df = load_coordinate_csv(book_id)
+    # page_idはImage列の値そのもの
+    image_name = page_id
+
+    # 現在のページだけに絞って処理
+    page_df = df[df["Image"] == image_name].copy()
+
+    # Column IDを追加（既存のColumn ID列があれば更新）
+    if "Column ID" not in page_df.columns:
+        page_df["Column ID"] = None
+
+    # 現在のページのColumn IDをクリア
+    page_df.loc[:, "Column ID"] = None
+
+    # 列ごとにColumn IDを設定
+    for col_idx, column in enumerate(request.columns, start=1):
+        column_id = f"COL{col_idx:04d}"
+        for char_id in column.char_ids:
+            mask = page_df["Char ID"] == char_id
+            page_df.loc[mask, "Column ID"] = column_id
+
+    # CSVを保存
+    output_csv = output_book_dir / "column_annotation.csv"
+
+    index_path = output_book_dir / INDEX_FILENAME
+    page_index = load_page_index(book_id)
+
+    if image_name not in page_index:
+        if not output_csv.exists():
+            page_df.to_csv(output_csv, index=False)
+        else:
+            # 新規ページなら追記のみ
+            page_df.to_csv(output_csv, mode="a", index=False, header=False)
+        index_path.parent.mkdir(parents=True, exist_ok=True)
+        with index_path.open("a", encoding="utf-8") as f:
+            f.write(f"{image_name}\n")
+        page_index.add(image_name)
+    else:
+        # 既存ページは該当行を除外して書き換え
+        tmp_path = output_csv.with_suffix(".tmp")
+        with output_csv.open("r", encoding="utf-8", newline="") as src, tmp_path.open(
+            "w", encoding="utf-8", newline=""
+        ) as dst:
+            reader = csv.DictReader(src)
+            fieldnames = list(reader.fieldnames or [])
+            for col in page_df.columns:
+                if col not in fieldnames:
+                    fieldnames.append(col)
+            if "Column ID" not in fieldnames:
+                fieldnames.append("Column ID")
+
+            writer = csv.DictWriter(dst, fieldnames=fieldnames)
+            writer.writeheader()
+            for row in reader:
+                if row.get("Image") == image_name:
+                    continue
+                writer.writerow({name: row.get(name, "") for name in fieldnames})
+
+        page_df.to_csv(tmp_path, mode="a", index=False, header=False)
+        tmp_path.replace(output_csv)
+
+    # 列画像はバックグラウンドで生成
+    columns_char_ids = [column.char_ids for column in request.columns]
+    background_tasks.add_task(generate_column_images, book_id, page_id, columns_char_ids)
+
     return {
         "success": True,
-        "message": f"保存完了: {len(request.columns)}列",
+        "message": f"保存完了: {len(request.columns)}列（列画像はバックグラウンド生成）",
         "csv_path": str(output_csv),
         "columns_dir": str(columns_dir),
     }
