@@ -47,6 +47,18 @@
                     <span class="toggle__slider"></span>
                     <span class="toggle__label">Auto</span>
                 </label>
+                <label class="toggle" title="表示モード切替">
+                    <span class="toggle__label">列</span>
+                    <input type="checkbox" id="view-toggle-seg">
+                    <span class="toggle__slider"></span>
+                    <span class="toggle__label">セグメント</span>
+                </label>
+                <button id="btn-confirm-column" class="btn btn--secondary" title="列確定 (Enter)">
+                    <span class="btn__icon">✓</span> 列確定
+                </button>
+                <button id="btn-unassign" class="btn btn--outline" title="選択文字を未分割に戻す (N)">
+                    <span class="btn__icon">⊘</span> 未分割へ
+                </button>
                 <button id="btn-undo" class="btn btn--outline" title="元に戻す (Z)" disabled>
                     <span class="btn__icon">↩</span> Undo
                 </button>
@@ -71,6 +83,16 @@
         <main class="main">
             <div class="canvas-container">
                 <canvas id="annotation-canvas"></canvas>
+
+                <div class="vertical-nav">
+                    <button id="btn-nav-up" class="vertical-nav__btn" title="前の文字へ (↑)" aria-label="前の文字へ">
+                        ↑
+                    </button>
+                    <button id="btn-nav-down" class="vertical-nav__btn" title="次の文字へ (↓)" aria-label="次の文字へ">
+                        ↓
+                    </button>
+                </div>
+
                 <div id="loading" class="loading">
                     <div class="loading__spinner"></div>
                     <div class="loading__text">読み込み中...</div>
@@ -83,7 +105,7 @@
         <!-- ステータスバー -->
         <footer class="statusbar">
             <div class="statusbar__item">
-                <span class="statusbar__label">列数:</span>
+                <span id="status-columns-label" class="statusbar__label">列数:</span>
                 <span id="status-columns" class="statusbar__value">0</span>
             </div>
             <div class="statusbar__item">
@@ -95,7 +117,7 @@
                 <span id="status-remaining" class="statusbar__value">0</span>
             </div>
             <div class="statusbar__item statusbar__hint">
-                <span>↑↓: 選択移動 | Enter: 列確定（最後の文字で全確定） | ←→: ページ移動</span>
+                <span>↑↓: 選択移動 | Enter: 列確定（最後の文字で全確定） | ←→: ページ移動 | 表示: 列/セグメント</span>
             </div>
         </footer>
     </div>
@@ -151,6 +173,9 @@
                         <tr><td><kbd>N</kbd></td><td>選択文字を未分割に戻す</td></tr>
                         <tr><td><kbd>Shift</kbd> + <kbd>N</kbd></td><td>全解除（全て未分割に戻す）</td></tr>
                         <tr><td><kbd>A</kbd></td><td>Autoモード ON/OFF 切り替え</td></tr>
+                        <tr><td><kbd>Enter</kbd> (セグメント表示)</td><td>セグメントを分割（選択列の位置で分割）</td></tr>
+                        <tr><td><kbd>N</kbd> (セグメント表示)</td><td>セグメントを結合（前のセグメントと結合）</td></tr>
+                        <tr><td><kbd>R</kbd> (セグメント表示)</td><td>Segment ID を変更</td></tr>
                     </table>
                 </section>
 
@@ -170,9 +195,15 @@
                 </section>
 
                 <section class="help-section">
+                    <h3>表示モード</h3>
+                    <p>ツールバーのスイッチで「列」表示と「セグメント」表示を切り替えられます。セグメント表示中は Segment ID の編集・保存（S）ができます（列の保存後のみ）。</p>
+                </section>
+
+                <section class="help-section">
                     <h3>出力ファイル</h3>
                     <ul>
                         <li><code>output/{book_id}/column_annotation.csv</code> - 列アノテーションCSV</li>
+                        <li><code>output_seg/{book_id}/column_annotation.csv</code> - セグメントアノテーションCSV（Segment ID追加）</li>
                         <li><code>output/{book_id}/columns/{page_id}_col0001.jpg</code> - 列画像</li>
                     </ul>
                 </section>
