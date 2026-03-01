@@ -3,9 +3,12 @@
 """
 
 from pathlib import Path
-from typing import Optional
+from dataclasses import dataclass
+from typing import Optional, cast
 
 import csv
+import re
+
 import pandas as pd
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse
@@ -17,6 +20,7 @@ from pydantic import BaseModel
 # ===== 設定 =====
 RAW_DIR = Path("raw")
 OUTPUT_DIR = Path("output")
+OUTPUT_SEG_DIR = Path("output_seg")
 INDEX_FILENAME = "column_annotation.index"
 
 app = FastAPI(title="くずし字列分割アノテーションツール")
@@ -39,6 +43,7 @@ class CharInfo(BaseModel):
     width: int
     height: int
     column_id: Optional[str] = None
+    segment_id: Optional[str] = None
 
 
 class PageData(BaseModel):
@@ -125,6 +130,58 @@ def load_existing_annotations(book_id: str, page_id: str) -> dict[str, str]:
     for _, row in page_df.iterrows():
         if pd.notna(row.get("Column ID")):
             result[row["Char ID"]] = row["Column ID"]
+    return result
+
+
+def load_existing_segment_annotations(book_id: str, page_id: str) -> dict[str, str]:
+    """既存のセグメントアノテーションを読み込み（Segment IDのマッピング）"""
+    seg_csv = OUTPUT_SEG_DIR / book_id / "column_annotation.csv"
+    if not seg_csv.exists():
+        return {}
+
+    df = pd.read_csv(seg_csv)
+    page_df = df[df["Image"] == page_id]
+
+    result: dict[str, str] = {}
+    for _, row in page_df.iterrows():
+        seg_id = row.get("Segment ID")
+        if pd.isna(seg_id):
+            continue
+        seg_str = str(seg_id).strip()
+        if not seg_str:
+            continue
+
+        char_id = row.get("Char ID")
+        if pd.isna(char_id):
+            continue
+        result[str(char_id)] = seg_str
+
+    return result
+
+
+def load_existing_segment_map(book_id: str, page_id: str) -> dict[str, str]:
+    """既存のセグメント割当を読み込み（Column ID -> Segment ID）"""
+    seg_csv = OUTPUT_SEG_DIR / book_id / "column_annotation.csv"
+    if not seg_csv.exists():
+        return {}
+
+    df = pd.read_csv(seg_csv)
+    page_df = df[df["Image"] == page_id]
+    if page_df.empty:
+        return {}
+
+    result: dict[str, str] = {}
+    for _, row in page_df.iterrows():
+        col_id = row.get("Column ID")
+        seg_id = row.get("Segment ID")
+        if pd.isna(col_id) or pd.isna(seg_id):
+            continue
+        col_str = str(col_id).strip()
+        seg_str = str(seg_id).strip()
+        if not col_str or not seg_str:
+            continue
+        result[col_str] = seg_str
+
     return result
 
 
@@ -271,6 +328,7 @@ async def get_page_data(book_id: str, page_id: str):
 
     # 既存のアノテーションを読み込み
     existing_annotations = load_existing_annotations(book_id, page_id)
+    existing_segment_annotations = load_existing_segment_annotations(book_id, page_id)
 
     characters = []
     for _, row in page_df.iterrows():
@@ -290,6 +348,7 @@ async def get_page_data(book_id: str, page_id: str):
                 width=int(row["Width"]),
                 height=int(row["Height"]),
                 column_id=existing_annotations.get(char_id),
+                segment_id=existing_segment_annotations.get(char_id),
             )
         )
 
@@ -311,12 +370,233 @@ async def get_page_image(book_id: str, page_id: str):
     return FileResponse(image_path, media_type="image/jpeg")
 
 
+
+
+@dataclass(frozen=True)
+class ColumnBox:
+    column_id: str
+    left: int
+    right: int
+    top: int
+    bottom: int
+    cx: float
+    cw: int
+    ch: int
+
+
+def _median_int(values: list[int]) -> int:
+    if not values:
+        return 0
+    sorted_vals = sorted(values)
+    mid = len(sorted_vals) // 2
+    if len(sorted_vals) % 2 == 1:
+        return int(sorted_vals[mid])
+    return int((sorted_vals[mid - 1] + sorted_vals[mid]) / 2)
+
+
+def _compute_column_boxes(page_df: pd.DataFrame) -> list[ColumnBox]:
+    if "Column ID" not in page_df.columns:
+        return []
+
+    boxes: list[ColumnBox] = []
+    grouped = page_df.dropna(subset=["Column ID"]).groupby("Column ID", sort=True)
+    for col_id, g in grouped:
+        left = int(g["X"].min())
+        top = int(g["Y"].min())
+        right = int((g["X"] + g["Width"]).max())
+        bottom = int((g["Y"] + g["Height"]).max())
+        cw = max(1, right - left)
+        ch = max(1, bottom - top)
+        cx = (left + right) / 2
+        boxes.append(
+            ColumnBox(
+                column_id=str(col_id),
+                left=left,
+                right=right,
+                top=top,
+                bottom=bottom,
+                cx=float(cx),
+                cw=cw,
+                ch=ch,
+            )
+        )
+
+    boxes.sort(key=lambda b: b.column_id)
+    return boxes
+
+
+def _estimate_segments_for_page(page_df: pd.DataFrame) -> dict[str, str]:
+    boxes = _compute_column_boxes(page_df)
+    if not boxes:
+        return {}
+
+    def x_overlap_ratio(a: ColumnBox, b: ColumnBox) -> float:
+        x_inter = max(0, min(a.right, b.right) - max(a.left, b.left))
+        min_w = max(1, min(a.cw, b.cw))
+        return x_inter / min_w
+
+    def y_overlap_ratio(a: ColumnBox, b: ColumnBox) -> float:
+        y_inter = max(0, min(a.bottom, b.bottom) - max(a.top, b.top))
+        min_h = max(1, min(a.ch, b.ch))
+        return y_inter / min_h
+
+    def rect_for_cols(col_ids: list[str]) -> tuple[int, int, int, int]:
+        left = min(box.left for box in boxes if box.column_id in col_ids)
+        top = min(box.top for box in boxes if box.column_id in col_ids)
+        right = max(box.right for box in boxes if box.column_id in col_ids)
+        bottom = max(box.bottom for box in boxes if box.column_id in col_ids)
+        return (left, top, right, bottom)
+
+    def overlap_ratio(a: tuple[int, int, int, int], b: tuple[int, int, int, int]) -> float:
+        al, at, ar, ab = a
+        bl, bt, br, bb = b
+        inter_w = max(0, min(ar, br) - max(al, bl))
+        inter_h = max(0, min(ab, bb) - max(at, bt))
+        inter = inter_w * inter_h
+        if inter <= 0:
+            return 0.0
+        area_a = max(1, (ar - al) * (ab - at))
+        area_b = max(1, (br - bl) * (bb - bt))
+        return inter / min(area_a, area_b)
+
+    rect_overlap_th_closed = 0.1
+    rect_overlap_th_future = 0.05
+    x_th = 0.6
+    stacked_x_th = 0.35
+    stacked_y_th = 0.1
+
+    by_id = {box.column_id: box for box in boxes}
+
+    segments: list[list[str]] = []
+    closed_rects: list[tuple[int, int, int, int]] = []
+
+    current: list[str] = [boxes[0].column_id]
+    current_rect = rect_for_cols(current)
+
+    for i in range(1, len(boxes)):
+        cur = boxes[i]
+        cand_cols = current + [cur.column_id]
+        cand_rect = rect_for_cols(cand_cols)
+
+        if any(overlap_ratio(cand_rect, r) > rect_overlap_th_closed for r in closed_rects):
+            segments.append(current)
+            closed_rects.append(current_rect)
+            current = [cur.column_id]
+            current_rect = rect_for_cols(current)
+            continue
+
+        if any(
+            (x_overlap_ratio(box, cur) >= x_th)
+            or (
+                (x_overlap_ratio(box, cur) >= stacked_x_th)
+                and (y_overlap_ratio(box, cur) <= stacked_y_th)
+            )
+            for box in boxes
+            if box.column_id in current
+        ):
+            segments.append(current)
+            closed_rects.append(current_rect)
+            current = [cur.column_id]
+            current_rect = rect_for_cols(current)
+            continue
+
+        cand_boxes = [by_id[cid] for cid in cand_cols]
+
+        intersects_future = False
+        for fut in boxes[i + 1 :]:
+            if not any(x_overlap_ratio(b, fut) >= x_th for b in cand_boxes):
+                continue
+            fut_rect = (fut.left, fut.top, fut.right, fut.bottom)
+            if overlap_ratio(cand_rect, fut_rect) > rect_overlap_th_future:
+                intersects_future = True
+                break
+
+        if intersects_future:
+            segments.append(current)
+            closed_rects.append(current_rect)
+            current = [cur.column_id]
+            current_rect = rect_for_cols(current)
+            continue
+
+        current = cand_cols
+        current_rect = cand_rect
+
+    segments.append(current)
+
+    mapping: dict[str, str] = {}
+    for seg_idx, cols_in_seg in enumerate(segments, start=1):
+        seg_id = f"SEG{seg_idx:04d}"
+        for col_id in cols_in_seg:
+            mapping[col_id] = seg_id
+
+    return mapping
+
+
+
+def _update_output_seg_csv(
+    book_id: str,
+    page_id: str,
+    page_df: pd.DataFrame,
+    segment_map_override: Optional[dict[str, str]] = None,
+) -> None:
+    out_dir = OUTPUT_SEG_DIR / book_id
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_csv = out_dir / "column_annotation.csv"
+
+    seg_df = page_df.copy()
+    if "Column ID" not in seg_df.columns:
+        seg_df["Column ID"] = None
+
+    seg_map = _estimate_segments_for_page(seg_df)
+
+    def to_seg(val: object) -> str:
+        if pd.isna(val):
+            return ""
+        col_id = str(val)
+        if segment_map_override is not None:
+            override = segment_map_override.get(col_id)
+            if override is not None:
+                override_str = str(override).strip()
+                if override_str:
+                    return override_str
+        return seg_map.get(col_id, "")
+
+    seg_df["Segment ID"] = seg_df["Column ID"].map(to_seg)
+
+    if not out_csv.exists():
+        seg_df.to_csv(out_csv, index=False)
+        return
+
+    tmp_path = out_csv.with_suffix(".tmp")
+    with out_csv.open("r", encoding="utf-8", newline="") as src, tmp_path.open(
+        "w", encoding="utf-8", newline=""
+    ) as dst:
+        reader = csv.DictReader(src)
+        fieldnames = list(reader.fieldnames or [])
+        for col in seg_df.columns:
+            if col not in fieldnames:
+                fieldnames.append(col)
+        if "Segment ID" not in fieldnames:
+            fieldnames.append("Segment ID")
+
+        writer = csv.DictWriter(dst, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in reader:
+            if row.get("Image") == page_id:
+                continue
+            writer.writerow({name: row.get(name, "") for name in fieldnames})
+
+        for record in seg_df.to_dict(orient="records"):
+            writer.writerow({name: record.get(name, "") for name in fieldnames})
+
+    tmp_path.replace(out_csv)
+
+
 def generate_column_images(
     book_id: str,
     page_id: str,
     columns: list[list[str]],
 ) -> None:
-    """列画像を生成（バックグラウンド実行）"""
     columns_dir = OUTPUT_DIR / book_id / "columns"
     columns_dir.mkdir(parents=True, exist_ok=True)
 
@@ -329,9 +609,8 @@ def generate_column_images(
     if page_df.empty:
         return
 
-    padding = 10  # 周囲に追加するパディング（ピクセル）
+    padding = 10
 
-    # 既存のこのページの列画像を削除
     for old_file in columns_dir.glob(f"{page_id}_col*.jpg"):
         old_file.unlink()
 
@@ -339,24 +618,20 @@ def generate_column_images(
         img_width, img_height = img.size
 
         for col_idx, char_ids in enumerate(columns, start=1):
-            # 列に含まれる文字のbboxを取得
             col_chars = page_df[page_df["Char ID"].isin(char_ids)]
             if col_chars.empty:
                 continue
 
-            # 列全体のbboxを計算
-            min_x = col_chars["X"].min()
-            min_y = col_chars["Y"].min()
-            max_x = (col_chars["X"] + col_chars["Width"]).max()
-            max_y = (col_chars["Y"] + col_chars["Height"]).max()
+            min_x = int(col_chars["X"].min())
+            min_y = int(col_chars["Y"].min())
+            max_x = int((col_chars["X"] + col_chars["Width"]).max())
+            max_y = int((col_chars["Y"] + col_chars["Height"]).max())
 
-            # パディングを追加（画像範囲内に収める）
             min_x = max(0, min_x - padding)
             min_y = max(0, min_y - padding)
             max_x = min(img_width, max_x + padding)
             max_y = min(img_height, max_y + padding)
 
-            # 画像を切り出し
             column_img = img.crop((min_x, min_y, max_x, max_y))
             column_path = columns_dir / f"{page_id}_col{col_idx:04d}.jpg"
             column_img.save(column_path, "JPEG", quality=95)
@@ -381,7 +656,7 @@ async def save_annotations(
     image_name = page_id
 
     # 現在のページだけに絞って処理
-    page_df = df[df["Image"] == image_name].copy()
+    page_df = cast(pd.DataFrame, df[df["Image"] == image_name].copy())
 
     # Column IDを追加（既存のColumn ID列があれば更新）
     if "Column ID" not in page_df.columns:
@@ -441,6 +716,10 @@ async def save_annotations(
     columns_char_ids = [column.char_ids for column in request.columns]
     background_tasks.add_task(generate_column_images, book_id, page_id, columns_char_ids)
 
+    # 既存のセグメント（手動編集）を可能な限り保持
+    segment_override = load_existing_segment_map(book_id, page_id)
+    _update_output_seg_csv(book_id, page_id, page_df, segment_map_override=segment_override or None)
+
     return {
         "success": True,
         "message": f"保存完了: {len(request.columns)}列（列画像はバックグラウンド生成）",
@@ -449,8 +728,80 @@ async def save_annotations(
     }
 
 
+class SegmentData(BaseModel):
+    """セグメントデータ（保存用）"""
+
+    segment_id: str
+    column_ids: list[str]
+
+
+class SaveSegmentsRequest(BaseModel):
+    """セグメント保存リクエスト"""
+
+    book_id: str
+    page_id: str
+    segments: list[SegmentData]
+
+
+@app.post("/api/books/{book_id}/pages/{page_id}/save_segments")
+async def save_segments(book_id: str, page_id: str, request: SaveSegmentsRequest):
+    """セグメント（Segment ID）を保存"""
+    if request.book_id != book_id or request.page_id != page_id:
+        raise HTTPException(status_code=400, detail="book_id/page_id mismatch")
+
+    output_csv = OUTPUT_DIR / book_id / "column_annotation.csv"
+    if not output_csv.exists():
+        raise HTTPException(
+            status_code=400,
+            detail="column annotations not found. Save columns first.",
+        )
+
+    # Column ID -> Segment ID のマップを作成（簡易バリデーション）
+    seg_map: dict[str, str] = {}
+    seg_id_re = re.compile(r"^SEG\d{4}$")
+    for seg in request.segments:
+        seg_id = str(seg.segment_id).strip()
+        if not seg_id_re.match(seg_id):
+            raise HTTPException(status_code=400, detail=f"invalid Segment ID: {seg_id}")
+        for col_id in seg.column_ids:
+            col = str(col_id).strip()
+            if not col:
+                continue
+            seg_map[col] = seg_id
+
+    # output/{book_id}/column_annotation.csv を読み込み、該当ページを更新して output_seg に書き出す
+    df = pd.read_csv(output_csv)
+    page_df = cast(pd.DataFrame, df[df["Image"] == page_id].copy())
+    if page_df.empty:
+        raise HTTPException(status_code=404, detail=f"page not found in annotations: {page_id}")
+
+    if "Column ID" not in page_df.columns:
+        raise HTTPException(status_code=400, detail="Column ID column not found")
+
+    page_cols = {str(v).strip() for v in page_df["Column ID"].dropna().unique().tolist() if str(v).strip()}
+    if not page_cols:
+        raise HTTPException(status_code=400, detail="no Column ID found for this page")
+
+    provided_cols = set(seg_map.keys())
+    unknown = sorted(provided_cols - page_cols)
+    missing = sorted(page_cols - provided_cols)
+    if unknown:
+        raise HTTPException(status_code=400, detail=f"unknown Column ID(s): {', '.join(unknown)}")
+    if missing:
+        raise HTTPException(status_code=400, detail=f"missing Column ID(s): {', '.join(missing)}")
+
+    _update_output_seg_csv(book_id, page_id, page_df, segment_map_override=seg_map)
+
+    out_csv = OUTPUT_SEG_DIR / book_id / "column_annotation.csv"
+    return {
+        "success": True,
+        "message": f"セグメント保存完了: {len(request.segments)}件",
+        "csv_path": str(out_csv),
+    }
+
+
 # ===== メイン =====
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8100, reload=True)
