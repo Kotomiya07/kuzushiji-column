@@ -10,5 +10,12 @@ dependencies = [
     "pandas>=2.3.3",
     "pillow>=12.1.0",
     "python-multipart>=0.0.21",
+    "ruff>=0.14.13",
     "uvicorn>=0.40.0",
+]
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.37.1",
+    "pytest>=9.0.2",
 ]

@@ -11,7 +11,9 @@ wheels/
 
 # Data directories (large files)
 raw/
+raw
 output/
+output_seg/
 
 # IDE
 .idea/
@@ -26,3 +28,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# agent instructions
+AGENTS.md
+.opencode/
