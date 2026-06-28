@@ -14,6 +14,15 @@ raw/
 raw
 output/
 output_seg/
+.cache/
+output_models/
+hf_output/
+kuzushiji-hf-converter/.git/
+kuzushiji-hf-converter/.venv/
+kuzushiji-hf-converter/.pytest_cache/
+kuzushiji-hf-converter/output*/
+kuzushiji-hf-converter/__pycache__/
+kuzushiji-hf-converter/tests/__pycache__/
 
 # IDE
 .idea/
