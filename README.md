@@ -26,8 +26,11 @@
 
 ```bash
 # リポジトリをクローン
-git clone <repository-url>
+git clone --recurse-submodules <repository-url>
 cd kuzushiji-column
+
+# 既存クローンの場合は converter サブモジュールを取得
+git submodule update --init --recursive
 
 # 依存パッケージをインストール
 uv sync
@@ -131,6 +134,41 @@ uv run uvicorn main:app --reload --host 0.0.0.0 --port 8100
 - 予測も保存も、基準は常に単文字 bbox に紐づく `Column ID` / `Segment ID` です
 - 左側パネルで、列/セグメントモデルの利用可否、学習サンプル数、学習時 metrics、直近の HITL feedback を確認できます
 - 保存時には、初期予測のうち何件が採用され何件が修正されたかを feedback として `output_models/{book_id}/feedback_history.jsonl` に蓄積します
+
+### Hugging Face Dataset 更新
+
+ヘッダーの `HF 更新` ボタンから、保存済みの `raw/`, `output/`, `output_seg/` を使って Hugging Face Dataset を作り直し、Hub へアップロードできます。
+
+この機能はサブモジュール `kuzushiji-hf-converter/` の `convert_dataset.py` を、親プロジェクトから以下の形で実行します。
+
+```bash
+uv run --project kuzushiji-hf-converter \
+  python kuzushiji-hf-converter/convert_dataset.py \
+  --export-format hf \
+  --dataset-type both \
+  --bbox-format coco \
+  --dataset-name-prefix kuzushiji-dataset \
+  --raw-dir raw \
+  --output-dir hf_output \
+  --column-annotations-dir output \
+  --segment-annotations-dir output_seg \
+  --push-to-hub \
+  --max-shard-size 500MB
+```
+
+前提:
+
+- `kuzushiji-hf-converter/` サブモジュールが取得済みであること
+- `hf auth login` 済み、または `HF_TOKEN` がサーバープロセスの環境変数に設定されていること
+- `HF_HUB_USERNAME` または `HF_USERNAME` を設定すると、アップロード先 owner を明示できます
+
+既定ではページ単位 dataset と文字単位 dataset の両方を更新します。作成中のローカル出力は `hf_output/` に保存されます。更新状態は `HF` 詳細ボタン、または以下のAPIで確認できます。
+
+```bash
+curl http://localhost:8100/api/huggingface/dataset/update/status
+```
+
+converter を直接使う場合の詳細は `kuzushiji-hf-converter/README.md` を参照してください。
 
 ### 自動未分割化
 
