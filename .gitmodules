@@ -1,0 +1,4 @@
+[submodule "kuzushiji-hf-converter"]
+	path = kuzushiji-hf-converter
+	url = https://github.com/Kotomiya07/kuzushiji-hf-converter.git
+	branch = kuzushiji-hf-converter
