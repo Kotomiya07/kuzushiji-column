@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>くずし字列分割アノテーションツール</title>
     <meta name="description" content="日本古典籍くずし字データセットの列分割アノテーションツール">
-    <link rel="stylesheet" href="/static/style.css?v=3">
+    <link rel="stylesheet" href="/static/style.css?v=6">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,6 +16,9 @@
         <header class="header">
             <h1 class="header__title">くずし字列分割アノテーションツール</h1>
             <div class="header__controls">
+                <div class="page-progress" title="データセット全体進捗" aria-live="polite">
+                    <span id="page-progress" class="page-progress__value">0/0(0%)</span>
+                </div>
                 <div class="control-group">
                     <label for="book-select">書籍:</label>
                     <select id="book-select" class="select">
@@ -40,6 +43,9 @@
                 <button id="btn-next" class="btn btn--secondary" title="次のページ (→)">
                     次 <span class="btn__icon">→</span>
                 </button>
+                <button id="btn-skip-next" class="btn btn--skip" title="保存せず次のページへスキップ">
+                    スキップ <span class="btn__icon">→</span>
+                </button>
             </div>
             <div class="toolbar__center">
                 <label class="toggle" title="自動列推定 ON/OFF (A)">
@@ -52,6 +58,11 @@
                     <input type="checkbox" id="view-toggle-seg">
                     <span class="toggle__slider"></span>
                     <span class="toggle__label">セグメント</span>
+                </label>
+                <label class="toggle" title="前後ページ画像のプリロード ON/OFF">
+                    <input type="checkbox" id="preload-toggle">
+                    <span class="toggle__slider"></span>
+                    <span class="toggle__label">Preload</span>
                 </label>
                 <button id="btn-confirm-column" class="btn btn--secondary" title="列確定 (Enter)">
                     <span class="btn__icon">✓</span> 列確定
@@ -70,6 +81,15 @@
                 <button id="btn-save" class="btn btn--primary btn--muted" title="保存 (S)">
                     <span class="btn__icon">💾</span> 保存
                 </button>
+                <button id="btn-train-model" class="btn btn--secondary" title="現在の書籍でモデルを再学習">
+                    <span class="btn__icon">⟳</span> モデル再学習
+                </button>
+                <button id="btn-update-hf-dataset" class="btn btn--secondary btn--hf" title="保存済みアノテーションでHugging Face Datasetを更新">
+                    <span class="btn__icon">HF</span> 更新
+                </button>
+                <button id="btn-hf-status" class="btn btn--outline btn--compact" title="Hugging Face Dataset更新の詳細を表示">
+                    詳細
+                </button>
                 <button id="btn-clear" class="btn btn--outline" title="全解除 (Shift+N)">
                     <span class="btn__icon">🧹</span> 全解除
                 </button>
@@ -81,8 +101,80 @@
 
         <!-- メインコンテンツ -->
         <main class="main">
+            <aside class="model-panel">
+                <div class="model-panel__header">
+                    <div>
+                        <p class="model-panel__eyebrow">Human in the Loop</p>
+                        <h2 class="model-panel__title" id="model-book">書籍未選択</h2>
+                    </div>
+                    <button id="btn-refresh-model-status" class="btn btn--outline btn--compact" title="モデル状態を更新">
+                        更新
+                    </button>
+                </div>
+                <p class="model-panel__prediction" id="model-prediction-source">初期値: 手動または既存アノテーション</p>
+                <div class="model-panel__grid">
+                    <article class="model-card">
+                        <h3 class="model-card__title">列モデル</h3>
+                        <dl class="model-card__list">
+                            <div><dt>状態</dt><dd id="model-column-availability">未学習</dd></div>
+                            <div><dt>学習境界数</dt><dd id="model-column-samples">0 境界</dd></div>
+                            <div><dt>最終学習</dt><dd id="model-column-trained">未学習</dd></div>
+                            <div><dt>学習時 metrics</dt><dd id="model-column-metrics">未計算</dd></div>
+                            <div><dt>HITL feedback</dt><dd id="model-column-feedback">まだ feedback なし</dd></div>
+                        </dl>
+                    </article>
+                    <article class="model-card">
+                        <h3 class="model-card__title">セグメントモデル</h3>
+                        <dl class="model-card__list">
+                            <div><dt>状態</dt><dd id="model-segment-availability">未学習</dd></div>
+                            <div><dt>学習境界数</dt><dd id="model-segment-samples">0 境界</dd></div>
+                            <div><dt>最終学習</dt><dd id="model-segment-trained">未学習</dd></div>
+                            <div><dt>学習時 metrics</dt><dd id="model-segment-metrics">未計算</dd></div>
+                            <div><dt>HITL feedback</dt><dd id="model-segment-feedback">まだ feedback なし</dd></div>
+                        </dl>
+                    </article>
+                </div>
+                <div class="statusbar statusbar--panel">
+                    <div class="statusbar__item">
+                        <span id="status-columns-label" class="statusbar__label">列数:</span>
+                        <span id="status-columns" class="statusbar__value">0</span>
+                    </div>
+                    <div class="statusbar__item">
+                        <span id="status-columns-secondary-label" class="statusbar__label"></span>
+                        <span id="status-columns-secondary" class="statusbar__value"></span>
+                    </div>
+                    <div class="statusbar__item">
+                        <span class="statusbar__label">現在:</span>
+                        <span id="status-current" class="statusbar__value">-</span>
+                    </div>
+                    <div class="statusbar__item">
+                        <span class="statusbar__label">未分割:</span>
+                        <span id="status-remaining" class="statusbar__value">0</span>
+                    </div>
+                    <div class="statusbar__item statusbar__model">
+                        <span class="statusbar__label">初期化:</span>
+                        <span id="status-model-usage" class="statusbar__value statusbar__value--plain">既存アノテーションまたは手動</span>
+                    </div>
+                    <div class="statusbar__item statusbar__hint">
+                        <span>↑↓: 選択 | Enter: 確定 | ←→: ページ | V: 表示</span>
+                    </div>
+                </div>
+            </aside>
             <div class="canvas-container">
-                <canvas id="annotation-canvas"></canvas>
+                <div id="canvas-workspace" class="canvas-workspace">
+                    <section id="column-pane" class="canvas-pane canvas-pane--active">
+                        <header id="column-pane-label" class="canvas-pane__header">列表示</header>
+                        <div class="canvas-pane__body">
+                            <canvas id="annotation-canvas"></canvas>
+                        </div>
+                    </section>
+                    <section id="compare-pane" class="canvas-pane canvas-pane--secondary" aria-hidden="true">
+                        <header id="segment-pane-label" class="canvas-pane__header">セグメント表示</header>
+                        <div class="canvas-pane__body">
+                            <canvas id="segment-canvas"></canvas>
+                        </div>
+                    </section>
+                </div>
 
                 <div class="vertical-nav">
                     <button id="btn-nav-up" class="vertical-nav__btn" title="前の文字へ (↑)" aria-label="前の文字へ">
@@ -102,24 +194,6 @@
             </div>
         </main>
 
-        <!-- ステータスバー -->
-        <footer class="statusbar">
-            <div class="statusbar__item">
-                <span id="status-columns-label" class="statusbar__label">列数:</span>
-                <span id="status-columns" class="statusbar__value">0</span>
-            </div>
-            <div class="statusbar__item">
-                <span class="statusbar__label">現在:</span>
-                <span id="status-current" class="statusbar__value">-</span>
-            </div>
-            <div class="statusbar__item">
-                <span class="statusbar__label">未分割:</span>
-                <span id="status-remaining" class="statusbar__value">0</span>
-            </div>
-            <div class="statusbar__item statusbar__hint">
-                <span>↑↓: 選択移動 | Enter: 列確定（最後の文字で全確定） | ←→: ページ移動 | 表示: 列/セグメント</span>
-            </div>
-        </footer>
     </div>
 
     <!-- 保存確認ダイアログ -->
@@ -131,6 +205,27 @@
                 <button id="dialog-cancel" class="btn btn--outline">キャンセル</button>
                 <button id="dialog-discard" class="btn btn--secondary">保存しない</button>
                 <button id="dialog-save" class="btn btn--primary">保存する</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Hugging Face更新詳細ダイアログ -->
+    <dialog id="hf-status-dialog" class="dialog dialog--wide">
+        <div class="dialog__content">
+            <div class="dialog__header">
+                <h2 class="dialog__title">Hugging Face Dataset更新</h2>
+                <button id="hf-status-close" class="dialog__close" title="閉じる">&times;</button>
+            </div>
+            <div class="hf-status">
+                <dl class="hf-status__list">
+                    <div><dt>状態</dt><dd id="hf-status-state">未実行</dd></div>
+                    <div><dt>開始</dt><dd id="hf-status-started">-</dd></div>
+                    <div><dt>終了</dt><dd id="hf-status-finished">-</dd></div>
+                    <div><dt>終了コード</dt><dd id="hf-status-returncode">-</dd></div>
+                    <div><dt>更新候補</dt><dd id="hf-status-candidates">-</dd></div>
+                    <div><dt>更新URL</dt><dd id="hf-status-urls">-</dd></div>
+                </dl>
+                <pre id="hf-status-log" class="hf-status__log">ログはまだありません</pre>
             </div>
         </div>
     </dialog>
@@ -170,6 +265,7 @@
                         <tr><td><kbd>Y</kbd></td><td>やり直し (Redo)</td></tr>
                         <tr><td><kbd>S</kbd></td><td>保存</td></tr>
                         <tr><td><kbd>H</kbd></td><td>このヘルプを表示</td></tr>
+                        <tr><td><kbd>V</kbd></td><td>列/セグメント表示を切り替え</td></tr>
                         <tr><td><kbd>N</kbd></td><td>選択文字を未分割に戻す</td></tr>
                         <tr><td><kbd>Shift</kbd> + <kbd>N</kbd></td><td>全解除（全て未分割に戻す）</td></tr>
                         <tr><td><kbd>A</kbd></td><td>Autoモード ON/OFF 切り替え</td></tr>
@@ -192,11 +288,20 @@
                 <section class="help-section">
                     <h3>Autoモード</h3>
                     <p>ONにすると、既存のアノテーションがないページを開いた時に、X座標に基づいて自動で列を推定します。推定結果を修正してから保存できます。</p>
+                    <p>学習済みモデルがある場合は、Auto推定より先にモデル推論結果を初期値として読み込みます。優先順位は「書籍別モデル → 全書籍共通モデル → 従来Auto」です。</p>
+                </section>
+
+                <section class="help-section">
+                    <h3>Human in the Loop</h3>
+                    <p>保存済みの列・セグメントから書籍ごとの境界モデルを学習し、新しいページではその推論結果を初期値として使えます。誤りは通常の列編集・セグメント編集で修正し、その保存結果が次の学習データになります。</p>
+                    <p>左側パネルでは、現在の書籍に対する列/セグメントモデルの学習状況、学習時 metrics、直近の human feedback を確認できます。</p>
                 </section>
 
                 <section class="help-section">
                     <h3>表示モード</h3>
-                    <p>ツールバーのスイッチで「列」表示と「セグメント」表示を切り替えられます。セグメント表示中は Segment ID の編集・保存（S）ができます（列の保存後のみ）。</p>
+                    <p>ツールバーのスイッチまたは <kbd>V</kbd> で「列」表示と「セグメント」表示を切り替えられます。セグメント表示中は、左に列表示・右にセグメント表示を並べて比較できます。</p>
+                    <p>セグメント表示中は、左ペインをクリックすると列編集、右ペインをクリックするとセグメント編集に切り替わります。</p>
+                    <p>セグメント表示中は Segment ID の編集・保存（S）ができます（列の保存後のみ）。</p>
                 </section>
 
                 <section class="help-section">
@@ -211,6 +316,7 @@
         </div>
     </dialog>
 
-    <script src="/static/app.js?v=4"></script>
+    <script src="/static/annotation_colors.js?v=5"></script>
+    <script src="/static/app.js?v=14"></script>
 </body>
 </html>
