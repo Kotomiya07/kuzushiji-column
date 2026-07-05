@@ -159,16 +159,11 @@ kbd {
 }
 
 .brand-mark {
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    font-family: var(--font-serif);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--surface-raised);
-    background: var(--ink);
+    display: block;
+    width: 34px;
+    height: 34px;
     border-radius: var(--radius-md);
+    object-fit: cover;
     user-select: none;
 }
 
