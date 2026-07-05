@@ -5,84 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>くずし字列分割アノテーションツール</title>
     <meta name="description" content="日本古典籍くずし字データセットの列分割アノテーションツール">
-    <link rel="stylesheet" href="/static/style.css?v=8">
+    <link rel="stylesheet" href="/static/style.css?v=10">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app">
-        <!-- アプリバー -->
-        <header class="appbar">
-            <div class="appbar__brand">
-                <span class="appbar__seal" aria-hidden="true">列</span>
-                <div class="appbar__titles">
-                    <span class="appbar__eyebrow">KUZUSHIJI ANNOTATOR</span>
-                    <h1 class="appbar__title">くずし字 列分割</h1>
+        <!-- ヘッダー -->
+        <header class="topbar">
+            <div class="topbar__brand">
+                <span class="brand-mark" aria-hidden="true">列</span>
+                <div class="brand-text">
+                    <h1 class="brand-text__title">くずし字 列分割</h1>
+                    <span class="brand-text__sub">Kuzushiji Column Annotator</span>
                 </div>
             </div>
 
-            <div class="appbar__center">
-                <div class="selector-group">
-                    <div class="selector">
-                        <label class="selector__label" for="book-select">書籍</label>
-                        <select id="book-select" class="selector__select">
+            <div class="topbar__doc" role="group" aria-label="資料の選択とページ移動">
+                <div class="doc-field">
+                    <label class="doc-field__label" for="book-select">書籍</label>
+                    <div class="doc-field__control">
+                        <select id="book-select" class="doc-field__select">
                             <option value="">読み込み中...</option>
                         </select>
-                        <svg class="selector__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <span class="selector-group__divider" aria-hidden="true"></span>
-                    <div class="selector">
-                        <label class="selector__label" for="page-select">ページ</label>
-                        <select id="page-select" class="selector__select">
-                            <option value="">書籍を選択</option>
-                        </select>
-                        <svg class="selector__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg class="doc-field__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                 </div>
-                <div class="progress-pill" title="データセット全体進捗" aria-live="polite">
-                    <span class="progress-pill__dot" aria-hidden="true"></span>
-                    <span id="page-progress" class="progress-pill__value">0/0(0%)</span>
+                <span class="topbar__rule" aria-hidden="true"></span>
+                <div class="doc-field">
+                    <label class="doc-field__label" for="page-select">ページ</label>
+                    <div class="doc-field__control">
+                        <select id="page-select" class="doc-field__select">
+                            <option value="">書籍を選択</option>
+                        </select>
+                        <svg class="doc-field__chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </div>
+                <div class="pager" role="group" aria-label="ページ送り">
+                    <button id="btn-prev" class="pager__btn" title="前のページ (←)" aria-label="前のページ">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button id="btn-next" class="pager__btn" title="次のページ (→)" aria-label="次のページ">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button id="btn-skip-next" class="pager__btn pager__btn--skip" title="保存せず次のページへスキップ">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3l4.5 5L3 13M8.5 3L13 8l-4.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>スキップ</span>
+                    </button>
+                </div>
+                <div class="progress-chip" title="データセット全体進捗" aria-live="polite">
+                    <span class="progress-chip__label">進捗</span>
+                    <span id="page-progress" class="progress-chip__value">0/0(0%)</span>
                 </div>
             </div>
 
-            <div class="appbar__actions">
-                <button id="btn-save" class="btn btn--primary btn--muted" title="保存 (S)">
-                    <span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8m0 0l3-3m-3 3L5 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11v2a1 1 0 001 1h8a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
-                    保存
-                </button>
-                <button id="btn-help" class="btn btn--ghost btn--icon-only" title="ヘルプ (H)" aria-label="ヘルプ">
+            <div class="topbar__actions">
+                <button id="btn-help" class="icon-btn" title="ヘルプ (H)" aria-label="ヘルプ">
                     <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M6.2 6.2a1.8 1.8 0 113 1.3c-.55.5-1.2.8-1.2 1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.3" r=".8" fill="currentColor"/></svg>
+                </button>
+                <button id="btn-save" class="btn btn--primary btn--muted" title="保存 (S)">
+                    保存
+                    <kbd class="btn__kbd">S</kbd>
                 </button>
             </div>
         </header>
 
         <!-- ワークベンチ -->
         <div class="workbench">
-            <!-- サイドバー -->
-            <aside class="sidebar">
-                <!-- ナビゲーション -->
-                <section class="sidebar__section">
-                    <h2 class="sidebar__heading">ナビゲーション</h2>
-                    <div class="nav-cluster">
-                        <button id="btn-prev" class="btn btn--surface nav-cluster__half" title="前のページ (←)">
-                            <span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                            前へ
-                        </button>
-                        <button id="btn-next" class="btn btn--surface nav-cluster__half" title="次のページ (→)">
-                            次へ
-                            <span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                        </button>
-                    </div>
-                    <button id="btn-skip-next" class="btn btn--surface btn--block btn--skip" title="保存せず次のページへスキップ">
-                        <span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3l4.5 5L3 13M8.5 3L13 8l-4.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                        スキップして次へ
-                    </button>
-                </section>
+            <!-- ステージ -->
+            <main class="stage canvas-container">
+                <div id="canvas-workspace" class="canvas-workspace">
+                    <section id="column-pane" class="canvas-pane canvas-pane--active">
+                        <header id="column-pane-label" class="canvas-pane__header">列表示</header>
+                        <div class="canvas-pane__body">
+                            <canvas id="annotation-canvas"></canvas>
+                        </div>
+                    </section>
+                    <section id="compare-pane" class="canvas-pane canvas-pane--secondary" aria-hidden="true">
+                        <header id="segment-pane-label" class="canvas-pane__header">セグメント表示</header>
+                        <div class="canvas-pane__body">
+                            <canvas id="segment-canvas"></canvas>
+                        </div>
+                    </section>
+                </div>
 
-                <!-- モード -->
-                <section class="sidebar__section">
-                    <h2 class="sidebar__heading">モード</h2>
+                <!-- 文字ナビゲーション -->
+                <div class="char-nav" role="group" aria-label="文字選択の移動">
+                    <button id="btn-nav-up" class="char-nav__btn" title="前の文字へ (↑)" aria-label="前の文字へ">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 10l5-5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <span class="char-nav__rule" aria-hidden="true"></span>
+                    <button id="btn-nav-down" class="char-nav__btn" title="次の文字へ (↓)" aria-label="次の文字へ">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
+
+                <!-- フローティング編集ツールバー -->
+                <div class="edit-dock" role="toolbar" aria-label="編集ツール">
+                    <button id="btn-confirm-column" class="dock-btn dock-btn--primary" title="列確定 (Enter)">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="dock-btn__label">列確定</span>
+                        <kbd class="dock-btn__kbd">⏎</kbd>
+                    </button>
+                    <span class="edit-dock__divider" aria-hidden="true"></span>
+                    <button id="btn-unassign" class="dock-btn" title="選択文字を未分割に戻す (N)">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.75" stroke="currentColor" stroke-width="1.5"/><path d="M4.2 11.8l7.6-7.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        <span class="dock-btn__label">未分割へ</span>
+                    </button>
+                    <button id="btn-undo" class="dock-btn" title="元に戻す (Z)" disabled>
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7h6a4 4 0 014 4v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        <span class="dock-btn__label">Undo</span>
+                    </button>
+                    <button id="btn-redo" class="dock-btn" title="やり直し (Y)" disabled>
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 7H7a4 4 0 00-4 4v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                        <span class="dock-btn__label">Redo</span>
+                    </button>
+                    <span class="edit-dock__divider" aria-hidden="true"></span>
+                    <button id="btn-clear" class="dock-btn dock-btn--danger" title="全解除 (Shift+N)">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13h10M9.5 3.2L4.4 8.3a1.5 1.5 0 000 2.1l1.2 1.2a1.5 1.5 0 002.1 0l5.1-5.1a1.5 1.5 0 000-2.1l-1.2-1.2a1.5 1.5 0 00-2.1 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="dock-btn__label">全解除</span>
+                    </button>
+                </div>
+
+                <div id="loading" class="loading">
+                    <div class="loading__spinner" aria-hidden="true"></div>
+                    <div class="loading__text">読み込み中...</div>
+                </div>
+                <!-- トースト通知 -->
+                <div id="toast" class="toast hidden" role="status"></div>
+            </main>
+
+            <!-- インスペクタ -->
+            <aside class="inspector" aria-label="設定とモデル情報">
+                <section class="inspector__section">
+                    <h2 class="inspector__heading">モード</h2>
                     <div class="mode-list">
                         <label class="mode-row" title="自動列推定 ON/OFF (A)">
                             <span class="mode-row__text">
@@ -111,17 +168,16 @@
                     </div>
                 </section>
 
-                <!-- モデル / HITL -->
-                <section class="sidebar__section sidebar__section--grow">
-                    <div class="sidebar__heading-row">
-                        <h2 class="sidebar__heading">Human in the Loop</h2>
-                        <button id="btn-refresh-model-status" class="btn btn--ghost btn--tiny" title="モデル状態を更新">
-                            <span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2.5v2.6h-2.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <section class="inspector__section inspector__section--grow">
+                    <div class="inspector__heading-row">
+                        <h2 class="inspector__heading">Human in the Loop</h2>
+                        <button id="btn-refresh-model-status" class="text-btn" title="モデル状態を更新">
+                            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2.5v2.6h-2.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             更新
                         </button>
                     </div>
-                    <p class="sidebar__booktitle" id="model-book">書籍未選択</p>
-                    <p class="sidebar__prediction" id="model-prediction-source">初期値: 手動または既存アノテーション</p>
+                    <p class="inspector__booktitle" id="model-book">書籍未選択</p>
+                    <p class="inspector__note" id="model-prediction-source">初期値: 手動または既存アノテーション</p>
 
                     <article class="model-card">
                         <header class="model-card__head">
@@ -151,16 +207,15 @@
                     </article>
                 </section>
 
-                <!-- データ操作 -->
-                <section class="sidebar__section sidebar__section--footer">
-                    <h2 class="sidebar__heading">データ</h2>
-                    <button id="btn-train-model" class="btn btn--surface btn--block" title="現在の書籍でモデルを再学習">
-                        <span class="btn__icon"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2.5v2.6h-2.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <section class="inspector__section inspector__section--footer">
+                    <h2 class="inspector__heading">データ</h2>
+                    <button id="btn-train-model" class="btn btn--outline btn--block" title="現在の書籍でモデルを再学習">
+                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2.5v2.6h-2.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         モデル再学習
                     </button>
                     <div class="hf-cluster">
-                        <button id="btn-update-hf-dataset" class="btn btn--surface btn--hf hf-cluster__main" title="保存済みアノテーションでHugging Face Datasetを更新">
-                            <span class="btn__icon btn__icon--hf">HF</span>
+                        <button id="btn-update-hf-dataset" class="btn btn--outline hf-cluster__main" title="保存済みアノテーションでHugging Face Datasetを更新">
+                            <span class="hf-badge" aria-hidden="true">HF</span>
                             Dataset 更新
                         </button>
                         <button id="btn-hf-status" class="btn btn--ghost hf-cluster__side" title="Hugging Face Dataset更新の詳細を表示">
@@ -169,67 +224,6 @@
                     </div>
                 </section>
             </aside>
-
-            <!-- ステージ -->
-            <div class="canvas-container">
-                <div id="canvas-workspace" class="canvas-workspace">
-                    <section id="column-pane" class="canvas-pane canvas-pane--active">
-                        <header id="column-pane-label" class="canvas-pane__header">列表示</header>
-                        <div class="canvas-pane__body">
-                            <canvas id="annotation-canvas"></canvas>
-                        </div>
-                    </section>
-                    <section id="compare-pane" class="canvas-pane canvas-pane--secondary" aria-hidden="true">
-                        <header id="segment-pane-label" class="canvas-pane__header">セグメント表示</header>
-                        <div class="canvas-pane__body">
-                            <canvas id="segment-canvas"></canvas>
-                        </div>
-                    </section>
-                </div>
-
-                <!-- フローティング編集ツールバー -->
-                <div class="edit-dock" role="toolbar" aria-label="編集ツール">
-                    <button id="btn-confirm-column" class="dock-btn dock-btn--primary" title="列確定 (Enter)">
-                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <span class="dock-btn__label">列確定</span>
-                    </button>
-                    <span class="edit-dock__divider" aria-hidden="true"></span>
-                    <button id="btn-unassign" class="dock-btn" title="選択文字を未分割に戻す (N)">
-                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="5.75" stroke="currentColor" stroke-width="1.5"/><path d="M4.2 11.8l7.6-7.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                        <span class="dock-btn__label">未分割へ</span>
-                    </button>
-                    <button id="btn-undo" class="dock-btn" title="元に戻す (Z)" disabled>
-                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7h6a4 4 0 014 4v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                        <span class="dock-btn__label">Undo</span>
-                    </button>
-                    <button id="btn-redo" class="dock-btn" title="やり直し (Y)" disabled>
-                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 7H7a4 4 0 00-4 4v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                        <span class="dock-btn__label">Redo</span>
-                    </button>
-                    <span class="edit-dock__divider" aria-hidden="true"></span>
-                    <button id="btn-clear" class="dock-btn dock-btn--danger" title="全解除 (Shift+N)">
-                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13h10M9.5 3.2L4.4 8.3a1.5 1.5 0 000 2.1l1.2 1.2a1.5 1.5 0 002.1 0l5.1-5.1a1.5 1.5 0 000-2.1l-1.2-1.2a1.5 1.5 0 00-2.1 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        <span class="dock-btn__label">全解除</span>
-                    </button>
-                </div>
-
-                <!-- 文字ナビゲーション -->
-                <div class="vertical-nav">
-                    <button id="btn-nav-up" class="vertical-nav__btn" title="前の文字へ (↑)" aria-label="前の文字へ">
-                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 10l5-5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                    <button id="btn-nav-down" class="vertical-nav__btn" title="次の文字へ (↓)" aria-label="次の文字へ">
-                        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                </div>
-
-                <div id="loading" class="loading">
-                    <div class="loading__spinner"></div>
-                    <div class="loading__text">読み込み中...</div>
-                </div>
-                <!-- トースト通知 -->
-                <div id="toast" class="toast hidden"></div>
-            </div>
         </div>
 
         <!-- ステータスバー -->
@@ -251,7 +245,7 @@
                     <span class="statusbar__label">未分割</span>
                     <span id="status-remaining" class="statusbar__value">0</span>
                 </div>
-                <div class="statusbar__item statusbar__model">
+                <div class="statusbar__item statusbar__item--wide">
                     <span class="statusbar__label">初期化</span>
                     <span id="status-model-usage" class="statusbar__value statusbar__value--plain">既存アノテーションまたは手動</span>
                 </div>
@@ -273,7 +267,7 @@
             <p class="dialog__text">現在のページに未保存の変更があります。</p>
             <div class="dialog__actions">
                 <button id="dialog-cancel" class="btn btn--ghost">キャンセル</button>
-                <button id="dialog-discard" class="btn btn--surface">保存しない</button>
+                <button id="dialog-discard" class="btn btn--outline">保存しない</button>
                 <button id="dialog-save" class="btn btn--primary">保存する</button>
             </div>
         </div>
@@ -284,7 +278,7 @@
         <div class="dialog__content">
             <div class="dialog__header">
                 <h2 class="dialog__title">Hugging Face Dataset更新</h2>
-                <button id="hf-status-close" class="dialog__close" title="閉じる">&times;</button>
+                <button id="hf-status-close" class="dialog__close" title="閉じる" aria-label="閉じる">&times;</button>
             </div>
             <div class="hf-status">
                 <dl class="hf-status__list">
@@ -305,9 +299,9 @@
         <div class="dialog__content">
             <div class="dialog__header">
                 <h2 class="dialog__title">くずし字列分割アノテーションツール</h2>
-                <button id="help-close" class="dialog__close" title="閉じる">&times;</button>
+                <button id="help-close" class="dialog__close" title="閉じる" aria-label="閉じる">&times;</button>
             </div>
-            
+
             <div class="help-content">
                 <section class="help-section">
                     <h3>概要</h3>
@@ -364,12 +358,12 @@
                 <section class="help-section">
                     <h3>Human in the Loop</h3>
                     <p>保存済みの列・セグメントから書籍ごとの境界モデルを学習し、新しいページではその推論結果を初期値として使えます。誤りは通常の列編集・セグメント編集で修正し、その保存結果が次の学習データになります。</p>
-                    <p>左側パネルでは、現在の書籍に対する列/セグメントモデルの学習状況、学習時 metrics、直近の human feedback を確認できます。</p>
+                    <p>右側パネルでは、現在の書籍に対する列/セグメントモデルの学習状況、学習時 metrics、直近の human feedback を確認できます。</p>
                 </section>
 
                 <section class="help-section">
                     <h3>表示モード</h3>
-                    <p>サイドバーのスイッチまたは <kbd>V</kbd> で「列」表示と「セグメント」表示を切り替えられます。セグメント表示中は、左に列表示・右にセグメント表示を並べて比較できます。</p>
+                    <p>右側パネルのスイッチまたは <kbd>V</kbd> で「列」表示と「セグメント」表示を切り替えられます。セグメント表示中は、左に列表示・右にセグメント表示を並べて比較できます。</p>
                     <p>セグメント表示中は、左ペインをクリックすると列編集、右ペインをクリックするとセグメント編集に切り替わります。</p>
                     <p>セグメント表示中は Segment ID の編集・保存（S）ができます（列の保存後のみ）。</p>
                 </section>
