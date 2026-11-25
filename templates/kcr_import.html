@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCR取り込み確認 | くずし字列分割</title>
+    <link rel="icon" type="image/png" href="/static/icon.png">
+    <link rel="stylesheet" href="/static/style.css?v=11">
+    <link rel="stylesheet" href="/static/kcr_import.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="/static/kcr_import.js" defer></script>
+</head>
+<body class="kcr-review">
+    <header class="kcr-header">
+        <div class="kcr-brand">
+            <p class="kcr-kicker">くずし字列分割 / 外部候補の照合</p>
+            <h1>KCR取り込み確認</h1>
+        </div>
+        <div class="kcr-progress" aria-live="polite">
+            <span id="kcr-progress-count">未判定 —</span>
+            <span id="kcr-progress-pages">残ページ —</span>
+        </div>
+        <nav class="kcr-nav" aria-label="ページ移動">
+            <button id="kcr-prev" class="btn btn--outline" type="button" disabled>前のページ</button>
+            <button id="kcr-next" class="btn btn--outline" type="button" disabled>次のページ</button>
+            <button id="kcr-next-pending" class="btn btn--outline" type="button" disabled>次の未判定ページ</button>
+        </nav>
+        <div class="kcr-actions">
+            <a id="kcr-home" class="btn btn--ghost" href="/">通常モードへ戻る</a>
+            <button id="kcr-save" class="btn btn--primary" aria-describedby="kcr-feedback" type="button" disabled>保存 (0)</button>
+        </div>
+    </header>
+    <div class="kcr-grid">
+        <aside class="kcr-panel kcr-pages" aria-labelledby="kcr-pages-title">
+            <div class="kcr-panel-head">
+                <p class="kcr-kicker">01 / 資料</p>
+                <h2 id="kcr-pages-title">候補ページ</h2>
+                <div class="kcr-filters">
+                    <label for="kcr-book">書籍</label>
+                    <select id="kcr-book"><option value="">すべての書籍</option></select>
+                    <label><input id="kcr-only-pending" type="checkbox" checked> 未判定のみ表示</label>
+                    <label><input id="kcr-only-related" type="checkbox"> 重複・近接を含むページのみ</label>
+                </div>
+            </div>
+            <div class="kcr-scroll">
+                <p id="kcr-list-message" class="kcr-note" role="status">候補一覧を読み込み中…</p>
+                <ul id="kcr-pages"></ul>
+            </div>
+        </aside>
+        <main class="kcr-stage" aria-labelledby="kcr-stage-title">
+            <div class="kcr-panel-head">
+                <p class="kcr-kicker">02 / 原本</p>
+                <h2 id="kcr-stage-title">ページ画像</h2>
+                <p id="kcr-stage-meta" class="kcr-meta"></p>
+                <ul class="kcr-legend" aria-label="箱の凡例">
+                    <li><span class="kcr-swatch kcr-existing"></span>既存</li>
+                    <li><span class="kcr-swatch kcr-new"></span>新規</li>
+                    <li><span class="kcr-swatch kcr-conflict_user"></span>重複</li>
+                    <li><span class="kcr-swatch kcr-near"></span>近接</li>
+                    <li><span class="kcr-swatch kcr-match"></span>照合先</li>
+                </ul>
+            </div>
+            <div id="kcr-stage-fit" class="kcr-stage-fit">
+                <p id="kcr-stage-message" class="kcr-note" role="status">左の一覧からページを選んでください。</p>
+                <canvas id="kcr-canvas" aria-label="ページ画像と文字枠。候補は判定欄からも選べます。" hidden></canvas>
+            </div>
+        </main>
+        <aside class="kcr-panel kcr-review-panel" aria-labelledby="kcr-review-title">
+            <div class="kcr-panel-head">
+                <p class="kcr-kicker">03 / 判定</p>
+                <h2 id="kcr-review-title">候補を確認</h2>
+                <p class="kcr-note">未判定を残したまま、選んだ判定だけ保存できます。</p>
+            </div>
+            <div id="kcr-cards" class="kcr-scroll kcr-cards"></div>
+            <footer class="kcr-panel-foot">
+                <p id="kcr-page-summary" class="kcr-meta"></p>
+                <p id="kcr-feedback" role="status" aria-live="polite"></p>
+            </footer>
+        </aside>
+    </div>
+</body>
+</html>

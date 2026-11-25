@@ -1,0 +1,8362 @@
+[
+ {
+  "book": "100249416",
+  "page": "100249416_00017_1",
+  "split": "test",
+  "box": [
+   224,
+   1770,
+   83,
+   126
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00017_1",
+  "split": "test",
+  "box": [
+   224,
+   1989,
+   85,
+   73
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   455,
+   652,
+   111,
+   94
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   1062,
+   666,
+   108,
+   82
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   1691,
+   638,
+   96,
+   99
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   656,
+   882,
+   99,
+   105
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   668,
+   984,
+   88,
+   102
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   256,
+   873,
+   65,
+   108
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   251,
+   984,
+   74,
+   122
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   251,
+   1106,
+   79,
+   79
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   1876,
+   820,
+   91,
+   60
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   1887,
+   1063,
+   96,
+   85
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   1901,
+   876,
+   71,
+   105
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00003_1",
+  "split": "test",
+  "box": [
+   1892,
+   984,
+   80,
+   74
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00049_1",
+  "split": "test",
+  "box": [
+   318,
+   1767,
+   50,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00062_2",
+  "split": "test",
+  "box": [
+   909,
+   780,
+   32,
+   144
+  ],
+  "status": "new",
+  "match_iou": 0.014,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00069_2",
+  "split": "test",
+  "box": [
+   424,
+   703,
+   82,
+   74
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00069_2",
+  "split": "test",
+  "box": [
+   1076,
+   726,
+   94,
+   34
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00069_2",
+  "split": "test",
+  "box": [
+   350,
+   1004,
+   227,
+   196
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00069_2",
+  "split": "test",
+  "box": [
+   395,
+   1222,
+   153,
+   210
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00079_2",
+  "split": "test",
+  "box": [
+   762,
+   2517,
+   99,
+   145
+  ],
+  "status": "new",
+  "match_iou": 0.027,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00079_2",
+  "split": "test",
+  "box": [
+   217,
+   940,
+   76,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.034,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00130_2",
+  "split": "test",
+  "box": [
+   1462,
+   628,
+   58,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00006_2",
+  "split": "test",
+  "box": [
+   124,
+   1826,
+   38,
+   180
+  ],
+  "status": "new",
+  "match_iou": 0.054,
+  "match": null,
+  "in_corrected_list": false
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00012_1",
+  "split": "test",
+  "box": [
+   1562,
+   1644,
+   48,
+   167
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00012_1",
+  "split": "test",
+  "box": [
+   1729,
+   2382,
+   50,
+   165
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00020_1",
+  "split": "test",
+  "box": [
+   174,
+   644,
+   50,
+   184
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00020_1",
+  "split": "test",
+  "box": [
+   331,
+   665,
+   64,
+   174
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00028_2",
+  "split": "test",
+  "box": [
+   1818,
+   1713,
+   40,
+   188
+  ],
+  "status": "new",
+  "match_iou": 0.036,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00057_1",
+  "split": "test",
+  "box": [
+   834,
+   1872,
+   44,
+   182
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00057_1",
+  "split": "test",
+  "box": [
+   670,
+   2195,
+   43,
+   148
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00064_1",
+  "split": "test",
+  "box": [
+   1026,
+   377,
+   53,
+   190
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00005_1",
+  "split": "test",
+  "box": [
+   850,
+   2544,
+   41,
+   147
+  ],
+  "status": "new",
+  "match_iou": 0.011,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00016_1",
+  "split": "test",
+  "box": [
+   1731,
+   1633,
+   60,
+   141
+  ],
+  "status": "new",
+  "match_iou": 0.008,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00016_1",
+  "split": "test",
+  "box": [
+   1734,
+   2728,
+   42,
+   131
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00016_1",
+  "split": "test",
+  "box": [
+   1580,
+   1258,
+   59,
+   136
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00016_1",
+  "split": "test",
+  "box": [
+   1433,
+   1606,
+   51,
+   152
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00018_1",
+  "split": "test",
+  "box": [
+   1592,
+   1602,
+   63,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.012,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00018_1",
+  "split": "test",
+  "box": [
+   701,
+   1985,
+   48,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.034,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00018_1",
+  "split": "test",
+  "box": [
+   96,
+   1476,
+   65,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.075,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00018_1",
+  "split": "test",
+  "box": [
+   99,
+   2587,
+   63,
+   121
+  ],
+  "status": "new",
+  "match_iou": 0.014,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_2",
+  "split": "test",
+  "box": [
+   1743,
+   2674,
+   96,
+   163
+  ],
+  "status": "new",
+  "match_iou": 0.031,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_2",
+  "split": "test",
+  "box": [
+   1472,
+   1667,
+   70,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_2",
+  "split": "test",
+  "box": [
+   1325,
+   1448,
+   36,
+   157
+  ],
+  "status": "new",
+  "match_iou": 0.025,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_2",
+  "split": "test",
+  "box": [
+   1325,
+   2876,
+   52,
+   114
+  ],
+  "status": "new",
+  "match_iou": 0.057,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_2",
+  "split": "test",
+  "box": [
+   407,
+   2143,
+   56,
+   205
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00020_1",
+  "split": "test",
+  "box": [
+   144,
+   716,
+   110,
+   178
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00020_1",
+  "split": "test",
+  "box": [
+   69,
+   2361,
+   124,
+   185
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00043_2",
+  "split": "test",
+  "box": [
+   483,
+   2743,
+   100,
+   136
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00043_2",
+  "split": "test",
+  "box": [
+   1701,
+   3423,
+   164,
+   181
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00043_2",
+  "split": "test",
+  "box": [
+   1717,
+   3665,
+   184,
+   209
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00020_2",
+  "split": "test",
+  "box": [
+   1143,
+   1253,
+   64,
+   190
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": false
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00026_2",
+  "split": "test",
+  "box": [
+   524,
+   1107,
+   55,
+   236
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00010_2",
+  "split": "test",
+  "box": [
+   2081,
+   1983,
+   76,
+   152
+  ],
+  "status": "new",
+  "match_iou": 0.09,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00010_2",
+  "split": "test",
+  "box": [
+   1487,
+   1714,
+   49,
+   134
+  ],
+  "status": "new",
+  "match_iou": 0.018,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1933,
+   368,
+   225,
+   204
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1626,
+   382,
+   235,
+   191
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1381,
+   385,
+   136,
+   184
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1054,
+   382,
+   211,
+   201
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   778,
+   371,
+   208,
+   177
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   475,
+   378,
+   238,
+   194
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   158,
+   375,
+   221,
+   201
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1950,
+   678,
+   225,
+   204
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1667,
+   674,
+   174,
+   259
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1763,
+   971,
+   364,
+   310
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1746,
+   1342,
+   269,
+   361
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1722,
+   1758,
+   330,
+   310
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1753,
+   2115,
+   307,
+   392
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   284,
+   763,
+   286,
+   303
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   250,
+   1151,
+   279,
+   330
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   274,
+   1972,
+   262,
+   218
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   288,
+   2201,
+   249,
+   255
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   298,
+   2504,
+   225,
+   215
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   284,
+   2728,
+   269,
+   310
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1017,
+   651,
+   276,
+   542
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   986,
+   1145,
+   327,
+   402
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   969,
+   1557,
+   330,
+   709
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   891,
+   2292,
+   586,
+   620
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   754,
+   3243,
+   235,
+   184
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1078,
+   3274,
+   181,
+   106
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100241706",
+  "page": "100241706_00002_1",
+  "split": "train",
+  "box": [
+   1310,
+   3246,
+   252,
+   181
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00004_1",
+  "split": "train",
+  "box": [
+   739,
+   2387,
+   90,
+   101
+  ],
+  "status": "near",
+  "match_iou": 0.329,
+  "match": {
+   "unicode": "U+3054",
+   "char_id": "C0144",
+   "box": [
+    740,
+    2388,
+    88,
+    34
+   ],
+   "user_added": false
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00006_1",
+  "split": "train",
+  "box": [
+   995,
+   1497,
+   63,
+   112
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00014_1",
+  "split": "train",
+  "box": [
+   1371,
+   1709,
+   42,
+   95
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00014_1",
+  "split": "train",
+  "box": [
+   1540,
+   1663,
+   42,
+   95
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00014_2",
+  "split": "train",
+  "box": [
+   1694,
+   1284,
+   73,
+   87
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00014_2",
+  "split": "train",
+  "box": [
+   1529,
+   2036,
+   86,
+   115
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00018_1",
+  "split": "train",
+  "box": [
+   1204,
+   2096,
+   85,
+   92
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00018_1",
+  "split": "train",
+  "box": [
+   384,
+   1675,
+   75,
+   90
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00002_2",
+  "split": "train",
+  "box": [
+   409,
+   636,
+   105,
+   81
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00002_2",
+  "split": "train",
+  "box": [
+   317,
+   967,
+   264,
+   131
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00002_2",
+  "split": "train",
+  "box": [
+   1034,
+   654,
+   94,
+   44
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00002_2",
+  "split": "train",
+  "box": [
+   847,
+   902,
+   78,
+   107
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00002_2",
+  "split": "train",
+  "box": [
+   829,
+   1007,
+   115,
+   159
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00002_2",
+  "split": "train",
+  "box": [
+   1232,
+   913,
+   94,
+   100
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00002_2",
+  "split": "train",
+  "box": [
+   1235,
+   1013,
+   94,
+   105
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00004_2",
+  "split": "train",
+  "box": [
+   1732,
+   1117,
+   39,
+   124
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00011_1",
+  "split": "train",
+  "box": [
+   506,
+   1737,
+   64,
+   136
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00011_1",
+  "split": "train",
+  "box": [
+   360,
+   1708,
+   40,
+   146
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00016_1",
+  "split": "train",
+  "box": [
+   1055,
+   2910,
+   115,
+   99
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00016_2",
+  "split": "train",
+  "box": [
+   765,
+   1343,
+   76,
+   129
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00018_1",
+  "split": "train",
+  "box": [
+   1492,
+   2667,
+   60,
+   121
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00019_1",
+  "split": "train",
+  "box": [
+   1475,
+   2125,
+   96,
+   106
+  ],
+  "status": "new",
+  "match_iou": 0.019,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00024_2",
+  "split": "train",
+  "box": [
+   403,
+   598,
+   85,
+   71
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00024_2",
+  "split": "train",
+  "box": [
+   1012,
+   616,
+   105,
+   46
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00024_2",
+  "split": "train",
+  "box": [
+   975,
+   980,
+   137,
+   191
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   438,
+   586,
+   82,
+   96
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   207,
+   774,
+   97,
+   103
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   217,
+   881,
+   84,
+   109
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   644,
+   784,
+   65,
+   76
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   635,
+   856,
+   97,
+   63
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   667,
+   927,
+   34,
+   72
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   644,
+   1007,
+   92,
+   90
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   842,
+   780,
+   61,
+   78
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   837,
+   860,
+   80,
+   69
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   856,
+   925,
+   31,
+   72
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   837,
+   1005,
+   76,
+   71
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1046,
+   608,
+   97,
+   80
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1680,
+   595,
+   93,
+   90
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1270,
+   788,
+   86,
+   97
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1279,
+   900,
+   76,
+   114
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1451,
+   776,
+   72,
+   65
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1472,
+   835,
+   34,
+   80
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1456,
+   913,
+   71,
+   78
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1472,
+   982,
+   36,
+   149
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1437,
+   1129,
+   92,
+   76
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1899,
+   769,
+   69,
+   101
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1903,
+   871,
+   76,
+   78
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1901,
+   952,
+   78,
+   74
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00025_1",
+  "split": "train",
+  "box": [
+   1901,
+   1041,
+   78,
+   84
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00028_2",
+  "split": "train",
+  "box": [
+   348,
+   2890,
+   105,
+   125
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00028_2",
+  "split": "train",
+  "box": [
+   239,
+   1331,
+   38,
+   92
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00029_2",
+  "split": "train",
+  "box": [
+   1192,
+   2876,
+   71,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00029_2",
+  "split": "train",
+  "box": [
+   780,
+   2220,
+   67,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00034_2",
+  "split": "train",
+  "box": [
+   1061,
+   2728,
+   105,
+   111
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00035_1",
+  "split": "train",
+  "box": [
+   169,
+   2902,
+   90,
+   58
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00035_1",
+  "split": "train",
+  "box": [
+   1720,
+   509,
+   39,
+   163
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00037_1",
+  "split": "train",
+  "box": [
+   186,
+   2472,
+   109,
+   124
+  ],
+  "status": "new",
+  "match_iou": 0.008,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00037_2",
+  "split": "train",
+  "box": [
+   1173,
+   2444,
+   116,
+   115
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00041_2",
+  "split": "train",
+  "box": [
+   477,
+   824,
+   86,
+   111
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00047_2",
+  "split": "train",
+  "box": [
+   413,
+   718,
+   99,
+   74
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00047_2",
+  "split": "train",
+  "box": [
+   1054,
+   730,
+   102,
+   43
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   399,
+   705,
+   88,
+   94
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   1046,
+   719,
+   100,
+   97
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   1692,
+   702,
+   94,
+   94
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   224,
+   965,
+   83,
+   103
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   258,
+   1087,
+   22,
+   153
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   224,
+   1248,
+   102,
+   96
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   633,
+   958,
+   71,
+   157
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   623,
+   1195,
+   90,
+   110
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   957,
+   1058,
+   257,
+   228
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   1541,
+   1354,
+   100,
+   124
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00048_1",
+  "split": "train",
+  "box": [
+   1873,
+   1348,
+   82,
+   137
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00049_2",
+  "split": "train",
+  "box": [
+   1482,
+   1629,
+   117,
+   118
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00049_2",
+  "split": "train",
+  "box": [
+   202,
+   1804,
+   102,
+   116
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00049_2",
+  "split": "train",
+  "box": [
+   771,
+   1428,
+   109,
+   159
+  ],
+  "status": "new",
+  "match_iou": 0.029,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00051_2",
+  "split": "train",
+  "box": [
+   898,
+   500,
+   113,
+   115
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00054_1",
+  "split": "train",
+  "box": [
+   761,
+   1653,
+   102,
+   133
+  ],
+  "status": "new",
+  "match_iou": 0.039,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00055_1",
+  "split": "train",
+  "box": [
+   1043,
+   2688,
+   54,
+   163
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00055_1",
+  "split": "train",
+  "box": [
+   1470,
+   2654,
+   37,
+   124
+  ],
+  "status": "new",
+  "match_iou": 0.02,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00056_1",
+  "split": "train",
+  "box": [
+   1916,
+   1902,
+   40,
+   111
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00056_1",
+  "split": "train",
+  "box": [
+   201,
+   1489,
+   84,
+   148
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00058_1",
+  "split": "train",
+  "box": [
+   213,
+   1447,
+   40,
+   122
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00058_2",
+  "split": "train",
+  "box": [
+   1074,
+   1425,
+   36,
+   122
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00058_2",
+  "split": "train",
+  "box": [
+   199,
+   2471,
+   92,
+   115
+  ],
+  "status": "new",
+  "match_iou": 0.034,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00060_2",
+  "split": "train",
+  "box": [
+   1093,
+   1015,
+   67,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.037,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00060_2",
+  "split": "train",
+  "box": [
+   1814,
+   2784,
+   57,
+   116
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00062_1",
+  "split": "train",
+  "box": [
+   1074,
+   2386,
+   93,
+   125
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00062_1",
+  "split": "train",
+  "box": [
+   1214,
+   2504,
+   79,
+   150
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00063_1",
+  "split": "train",
+  "box": [
+   1077,
+   1392,
+   66,
+   121
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00063_2",
+  "split": "train",
+  "box": [
+   1788,
+   1588,
+   66,
+   138
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00063_2",
+  "split": "train",
+  "box": [
+   318,
+   497,
+   90,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.004,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   454,
+   705,
+   105,
+   96
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   1077,
+   717,
+   105,
+   99
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   1697,
+   722,
+   91,
+   82
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   1669,
+   1099,
+   136,
+   93
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   1688,
+   1192,
+   110,
+   96
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   1686,
+   1277,
+   110,
+   102
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   434,
+   960,
+   147,
+   119
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   479,
+   1085,
+   65,
+   68
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00070_1",
+  "split": "train",
+  "box": [
+   456,
+   1164,
+   122,
+   147
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00071_1",
+  "split": "train",
+  "box": [
+   1592,
+   1016,
+   114,
+   122
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00086_1",
+  "split": "train",
+  "box": [
+   172,
+   1466,
+   95,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.019,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00088_1",
+  "split": "train",
+  "box": [
+   195,
+   602,
+   61,
+   118
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00088_2",
+  "split": "train",
+  "box": [
+   1604,
+   2617,
+   64,
+   124
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00092_2",
+  "split": "train",
+  "box": [
+   427,
+   711,
+   99,
+   67
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00092_2",
+  "split": "train",
+  "box": [
+   1091,
+   726,
+   95,
+   42
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00092_2",
+  "split": "train",
+  "box": [
+   1095,
+   989,
+   112,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00092_2",
+  "split": "train",
+  "box": [
+   1097,
+   1113,
+   107,
+   126
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00092_2",
+  "split": "train",
+  "box": [
+   1093,
+   1244,
+   101,
+   105
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00092_2",
+  "split": "train",
+  "box": [
+   1076,
+   1362,
+   116,
+   126
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00093_1",
+  "split": "train",
+  "box": [
+   397,
+   701,
+   108,
+   116
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00093_1",
+  "split": "train",
+  "box": [
+   1010,
+   724,
+   105,
+   97
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00093_1",
+  "split": "train",
+  "box": [
+   1634,
+   704,
+   85,
+   111
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00094_1",
+  "split": "train",
+  "box": [
+   1744,
+   518,
+   63,
+   131
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.871,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0024",
+   "box": [
+    1738,
+    516,
+    67,
+    133
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00094_1",
+  "split": "train",
+  "box": [
+   309,
+   1473,
+   80,
+   155
+  ],
+  "status": "new",
+  "match_iou": 0.01,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00096_2",
+  "split": "train",
+  "box": [
+   1352,
+   1546,
+   54,
+   117
+  ],
+  "status": "new",
+  "match_iou": 0.041,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00097_2",
+  "split": "train",
+  "box": [
+   1229,
+   2183,
+   62,
+   134
+  ],
+  "status": "new",
+  "match_iou": 0.024,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00098_1",
+  "split": "train",
+  "box": [
+   1321,
+   989,
+   27,
+   83
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00099_2",
+  "split": "train",
+  "box": [
+   799,
+   1451,
+   103,
+   176
+  ],
+  "status": "new",
+  "match_iou": 0.095,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00100_2",
+  "split": "train",
+  "box": [
+   1757,
+   1335,
+   113,
+   134
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00104_1",
+  "split": "train",
+  "box": [
+   1638,
+   1001,
+   40,
+   113
+  ],
+  "status": "new",
+  "match_iou": 0.008,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00104_2",
+  "split": "train",
+  "box": [
+   1593,
+   1248,
+   114,
+   149
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00104_2",
+  "split": "train",
+  "box": [
+   749,
+   2616,
+   100,
+   113
+  ],
+  "status": "new",
+  "match_iou": 0.025,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00110_2",
+  "split": "train",
+  "box": [
+   1912,
+   1483,
+   69,
+   129
+  ],
+  "status": "new",
+  "match_iou": 0.062,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00110_2",
+  "split": "train",
+  "box": [
+   1757,
+   2124,
+   71,
+   157
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00112_1",
+  "split": "train",
+  "box": [
+   880,
+   643,
+   73,
+   167
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00115_2",
+  "split": "train",
+  "box": [
+   364,
+   722,
+   106,
+   77
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00115_2",
+  "split": "train",
+  "box": [
+   992,
+   729,
+   85,
+   40
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00115_2",
+  "split": "train",
+  "box": [
+   999,
+   1004,
+   113,
+   155
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00115_2",
+  "split": "train",
+  "box": [
+   992,
+   1160,
+   119,
+   142
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00115_2",
+  "split": "train",
+  "box": [
+   1003,
+   1306,
+   100,
+   138
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00116_1",
+  "split": "train",
+  "box": [
+   458,
+   743,
+   97,
+   85
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00116_1",
+  "split": "train",
+  "box": [
+   1072,
+   757,
+   103,
+   59
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00116_1",
+  "split": "train",
+  "box": [
+   1706,
+   743,
+   81,
+   67
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00116_1",
+  "split": "train",
+  "box": [
+   1603,
+   1042,
+   202,
+   218
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00116_2",
+  "split": "train",
+  "box": [
+   606,
+   1644,
+   102,
+   114
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00120_2",
+  "split": "train",
+  "box": [
+   1438,
+   2899,
+   113,
+   135
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00126_1",
+  "split": "train",
+  "box": [
+   1764,
+   1157,
+   69,
+   121
+  ],
+  "status": "new",
+  "match_iou": 0.004,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00127_2",
+  "split": "train",
+  "box": [
+   1147,
+   2252,
+   102,
+   121
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00128_1",
+  "split": "train",
+  "box": [
+   909,
+   2684,
+   75,
+   67
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00128_1",
+  "split": "train",
+  "box": [
+   514,
+   628,
+   37,
+   136
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00129_1",
+  "split": "train",
+  "box": [
+   1952,
+   2384,
+   58,
+   124
+  ],
+  "status": "new",
+  "match_iou": 0.061,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00129_2",
+  "split": "train",
+  "box": [
+   908,
+   637,
+   35,
+   176
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00132_1",
+  "split": "train",
+  "box": [
+   1245,
+   1776,
+   37,
+   156
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00003_2",
+  "split": "train",
+  "box": [
+   1671,
+   2812,
+   59,
+   150
+  ],
+  "status": "new",
+  "match_iou": 0.038,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00003_2",
+  "split": "train",
+  "box": [
+   1428,
+   1951,
+   54,
+   188
+  ],
+  "status": "new",
+  "match_iou": 0.01,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00003_2",
+  "split": "train",
+  "box": [
+   1177,
+   2545,
+   57,
+   184
+  ],
+  "status": "new",
+  "match_iou": 0.03,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00003_2",
+  "split": "train",
+  "box": [
+   555,
+   1512,
+   61,
+   178
+  ],
+  "status": "new",
+  "match_iou": 0.079,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00003_2",
+  "split": "train",
+  "box": [
+   320,
+   622,
+   54,
+   137
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00004_1",
+  "split": "train",
+  "box": [
+   445,
+   2446,
+   42,
+   161
+  ],
+  "status": "new",
+  "match_iou": 0.071,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00004_2",
+  "split": "train",
+  "box": [
+   568,
+   662,
+   48,
+   159
+  ],
+  "status": "new",
+  "match_iou": 0.04,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00011_2",
+  "split": "train",
+  "box": [
+   809,
+   1650,
+   29,
+   107
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00011_2",
+  "split": "train",
+  "box": [
+   302,
+   1069,
+   41,
+   127
+  ],
+  "status": "new",
+  "match_iou": 0.012,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00012_2",
+  "split": "train",
+  "box": [
+   554,
+   2091,
+   31,
+   126
+  ],
+  "status": "new",
+  "match_iou": 0.006,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00013_1",
+  "split": "train",
+  "box": [
+   544,
+   979,
+   39,
+   138
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00015_2",
+  "split": "train",
+  "box": [
+   1765,
+   2722,
+   39,
+   133
+  ],
+  "status": "new",
+  "match_iou": 0.033,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00015_2",
+  "split": "train",
+  "box": [
+   918,
+   2673,
+   51,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00015_2",
+  "split": "train",
+  "box": [
+   909,
+   888,
+   36,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.025,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00016_1",
+  "split": "train",
+  "box": [
+   1682,
+   820,
+   58,
+   118
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00016_1",
+  "split": "train",
+  "box": [
+   678,
+   882,
+   27,
+   126
+  ],
+  "status": "new",
+  "match_iou": 0.017,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00016_2",
+  "split": "train",
+  "box": [
+   786,
+   1263,
+   59,
+   129
+  ],
+  "status": "new",
+  "match_iou": 0.048,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00016_2",
+  "split": "train",
+  "box": [
+   919,
+   1942,
+   40,
+   131
+  ],
+  "status": "new",
+  "match_iou": 0.043,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00016_2",
+  "split": "train",
+  "box": [
+   787,
+   2187,
+   40,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.057,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00017_1",
+  "split": "train",
+  "box": [
+   1568,
+   1816,
+   37,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.027,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00017_1",
+  "split": "train",
+  "box": [
+   1558,
+   2525,
+   35,
+   128
+  ],
+  "status": "new",
+  "match_iou": 0.025,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00017_1",
+  "split": "train",
+  "box": [
+   1308,
+   2121,
+   52,
+   178
+  ],
+  "status": "new",
+  "match_iou": 0.039,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00018_2",
+  "split": "train",
+  "box": [
+   1428,
+   2169,
+   35,
+   134
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00018_2",
+  "split": "train",
+  "box": [
+   1424,
+   2885,
+   34,
+   123
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00018_2",
+  "split": "train",
+  "box": [
+   1178,
+   2261,
+   33,
+   151
+  ],
+  "status": "new",
+  "match_iou": 0.052,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00018_2",
+  "split": "train",
+  "box": [
+   793,
+   664,
+   33,
+   134
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00018_2",
+  "split": "train",
+  "box": [
+   435,
+   1686,
+   37,
+   162
+  ],
+  "status": "new",
+  "match_iou": 0.022,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00019_2",
+  "split": "train",
+  "box": [
+   422,
+   2282,
+   40,
+   157
+  ],
+  "status": "near",
+  "match_iou": 0.301,
+  "match": {
+   "unicode": "U+3057",
+   "char_id": "C0337",
+   "box": [
+    405,
+    2359,
+    62,
+    122
+   ],
+   "user_added": false
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00019_2",
+  "split": "train",
+  "box": [
+   547,
+   2053,
+   29,
+   145
+  ],
+  "status": "new",
+  "match_iou": 0.011,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00019_2",
+  "split": "train",
+  "box": [
+   1782,
+   526,
+   32,
+   127
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00019_2",
+  "split": "train",
+  "box": [
+   548,
+   686,
+   46,
+   137
+  ],
+  "status": "new",
+  "match_iou": 0.067,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00021_2",
+  "split": "train",
+  "box": [
+   1160,
+   2675,
+   38,
+   147
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00027_2",
+  "split": "train",
+  "box": [
+   1665,
+   1306,
+   32,
+   138
+  ],
+  "status": "new",
+  "match_iou": 0.008,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00027_2",
+  "split": "train",
+  "box": [
+   1545,
+   1394,
+   33,
+   131
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00027_2",
+  "split": "train",
+  "box": [
+   1049,
+   579,
+   30,
+   135
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00027_2",
+  "split": "train",
+  "box": [
+   1044,
+   2050,
+   33,
+   131
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00030_1",
+  "split": "train",
+  "box": [
+   356,
+   2869,
+   49,
+   114
+  ],
+  "status": "new",
+  "match_iou": 0.021,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00031_1",
+  "split": "train",
+  "box": [
+   816,
+   518,
+   39,
+   124
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00031_1",
+  "split": "train",
+  "box": [
+   1814,
+   1110,
+   32,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.026,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00032_2",
+  "split": "train",
+  "box": [
+   166,
+   1806,
+   34,
+   153
+  ],
+  "status": "new",
+  "match_iou": 0.065,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00036_2",
+  "split": "train",
+  "box": [
+   1648,
+   826,
+   49,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.079,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00036_2",
+  "split": "train",
+  "box": [
+   1274,
+   939,
+   28,
+   106
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00037_1",
+  "split": "train",
+  "box": [
+   924,
+   2677,
+   31,
+   141
+  ],
+  "status": "new",
+  "match_iou": 0.026,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00043_1",
+  "split": "train",
+  "box": [
+   1400,
+   2478,
+   40,
+   153
+  ],
+  "status": "new",
+  "match_iou": 0.013,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00043_1",
+  "split": "train",
+  "box": [
+   652,
+   1252,
+   40,
+   146
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00044_2",
+  "split": "train",
+  "box": [
+   1024,
+   1893,
+   46,
+   177
+  ],
+  "status": "new",
+  "match_iou": 0.006,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00048_2",
+  "split": "train",
+  "box": [
+   1790,
+   528,
+   61,
+   183
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00048_2",
+  "split": "train",
+  "box": [
+   1647,
+   1510,
+   67,
+   169
+  ],
+  "status": "new",
+  "match_iou": 0.121,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00048_2",
+  "split": "train",
+  "box": [
+   1274,
+   651,
+   48,
+   138
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00049_1",
+  "split": "train",
+  "box": [
+   1924,
+   1938,
+   44,
+   196
+  ],
+  "status": "new",
+  "match_iou": 0.01,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00049_2",
+  "split": "train",
+  "box": [
+   767,
+   2062,
+   35,
+   159
+  ],
+  "status": "new",
+  "match_iou": 0.053,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00049_2",
+  "split": "train",
+  "box": [
+   154,
+   1088,
+   59,
+   134
+  ],
+  "status": "new",
+  "match_iou": 0.076,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00050_1",
+  "split": "train",
+  "box": [
+   1297,
+   514,
+   45,
+   168
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00050_1",
+  "split": "train",
+  "box": [
+   930,
+   2260,
+   56,
+   142
+  ],
+  "status": "new",
+  "match_iou": 0.081,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00050_1",
+  "split": "train",
+  "box": [
+   308,
+   2169,
+   25,
+   75
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00051_2",
+  "split": "train",
+  "box": [
+   1419,
+   2489,
+   34,
+   160
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00003_1",
+  "split": "train",
+  "box": [
+   1540,
+   868,
+   48,
+   128
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00003_1",
+  "split": "train",
+  "box": [
+   873,
+   831,
+   70,
+   159
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00008_2",
+  "split": "train",
+  "box": [
+   961,
+   1732,
+   44,
+   128
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00009_1",
+  "split": "train",
+  "box": [
+   6,
+   2761,
+   101,
+   148
+  ],
+  "status": "new",
+  "match_iou": 0.031,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00011_1",
+  "split": "train",
+  "box": [
+   366,
+   2045,
+   36,
+   162
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00013_1",
+  "split": "train",
+  "box": [
+   1039,
+   2434,
+   38,
+   153
+  ],
+  "status": "new",
+  "match_iou": 0.011,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00014_1",
+  "split": "train",
+  "box": [
+   1568,
+   2479,
+   102,
+   141
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00014_1",
+  "split": "train",
+  "box": [
+   321,
+   574,
+   47,
+   181
+  ],
+  "status": "new",
+  "match_iou": 0.036,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00014_2",
+  "split": "train",
+  "box": [
+   1495,
+   2735,
+   42,
+   123
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00015_1",
+  "split": "train",
+  "box": [
+   510,
+   2666,
+   38,
+   128
+  ],
+  "status": "new",
+  "match_iou": 0.025,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00017_2",
+  "split": "train",
+  "box": [
+   1174,
+   2279,
+   91,
+   136
+  ],
+  "status": "new",
+  "match_iou": 0.01,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00018_2",
+  "split": "train",
+  "box": [
+   1636,
+   2709,
+   53,
+   131
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00019_1",
+  "split": "train",
+  "box": [
+   535,
+   2448,
+   46,
+   158
+  ],
+  "status": "new",
+  "match_iou": 0.012,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00026_1",
+  "split": "train",
+  "box": [
+   1372,
+   2085,
+   43,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.017,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00031_1",
+  "split": "train",
+  "box": [
+   1349,
+   1031,
+   42,
+   205
+  ],
+  "status": "new",
+  "match_iou": 0.086,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00031_1",
+  "split": "train",
+  "box": [
+   1003,
+   730,
+   47,
+   178
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00031_1",
+  "split": "train",
+  "box": [
+   162,
+   1440,
+   40,
+   141
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00032_2",
+  "split": "train",
+  "box": [
+   1275,
+   2417,
+   42,
+   198
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00032_2",
+  "split": "train",
+  "box": [
+   595,
+   2618,
+   34,
+   144
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00032_2",
+  "split": "train",
+  "box": [
+   598,
+   1249,
+   38,
+   166
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00033_2",
+  "split": "train",
+  "box": [
+   447,
+   1542,
+   40,
+   156
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00033_2",
+  "split": "train",
+  "box": [
+   105,
+   2623,
+   47,
+   160
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00037_2",
+  "split": "train",
+  "box": [
+   124,
+   1810,
+   51,
+   154
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00037_2",
+  "split": "train",
+  "box": [
+   437,
+   2118,
+   38,
+   156
+  ],
+  "status": "new",
+  "match_iou": 0.004,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00038_2",
+  "split": "train",
+  "box": [
+   1505,
+   1365,
+   39,
+   175
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00040_1",
+  "split": "train",
+  "box": [
+   521,
+   2780,
+   46,
+   168
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00041_2",
+  "split": "train",
+  "box": [
+   147,
+   1964,
+   40,
+   139
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00043_1",
+  "split": "train",
+  "box": [
+   1694,
+   1510,
+   45,
+   166
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00043_2",
+  "split": "train",
+  "box": [
+   1686,
+   1386,
+   39,
+   172
+  ],
+  "status": "new",
+  "match_iou": 0.053,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00046_1",
+  "split": "train",
+  "box": [
+   184,
+   1858,
+   37,
+   149
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00046_2",
+  "split": "train",
+  "box": [
+   1482,
+   1869,
+   84,
+   135
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00048_2",
+  "split": "train",
+  "box": [
+   788,
+   464,
+   44,
+   140
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00048_2",
+  "split": "train",
+  "box": [
+   134,
+   1919,
+   41,
+   175
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00049_1",
+  "split": "train",
+  "box": [
+   836,
+   688,
+   41,
+   155
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00049_1",
+  "split": "train",
+  "box": [
+   510,
+   1919,
+   49,
+   183
+  ],
+  "status": "new",
+  "match_iou": 0.002,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00049_2",
+  "split": "train",
+  "box": [
+   1820,
+   387,
+   38,
+   188
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00049_2",
+  "split": "train",
+  "box": [
+   976,
+   2065,
+   40,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00049_2",
+  "split": "train",
+  "box": [
+   106,
+   888,
+   53,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.048,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00058_2",
+  "split": "train",
+  "box": [
+   1485,
+   1625,
+   46,
+   165
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00059_1",
+  "split": "train",
+  "box": [
+   839,
+   602,
+   105,
+   157
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00060_1",
+  "split": "train",
+  "box": [
+   677,
+   1713,
+   44,
+   158
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00060_1",
+  "split": "train",
+  "box": [
+   151,
+   2735,
+   48,
+   156
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00062_1",
+  "split": "train",
+  "box": [
+   859,
+   2757,
+   59,
+   137
+  ],
+  "status": "new",
+  "match_iou": 0.006,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00063_1",
+  "split": "train",
+  "box": [
+   1716,
+   495,
+   47,
+   201
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00067_1",
+  "split": "train",
+  "box": [
+   1726,
+   2078,
+   43,
+   191
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00070_1",
+  "split": "train",
+  "box": [
+   181,
+   561,
+   40,
+   177
+  ],
+  "status": "new",
+  "match_iou": 0.002,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00071_1",
+  "split": "train",
+  "box": [
+   1045,
+   752,
+   48,
+   170
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00071_1",
+  "split": "train",
+  "box": [
+   545,
+   553,
+   37,
+   190
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00071_2",
+  "split": "train",
+  "box": [
+   1142,
+   633,
+   38,
+   213
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00071_2",
+  "split": "train",
+  "box": [
+   1682,
+   2240,
+   41,
+   180
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00072_1",
+  "split": "train",
+  "box": [
+   881,
+   1691,
+   42,
+   175
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00072_1",
+  "split": "train",
+  "box": [
+   1411,
+   2418,
+   45,
+   172
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00075_2",
+  "split": "train",
+  "box": [
+   1829,
+   1397,
+   48,
+   209
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00079_2",
+  "split": "train",
+  "box": [
+   804,
+   1813,
+   44,
+   173
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00003_1",
+  "split": "train",
+  "box": [
+   1217,
+   2353,
+   50,
+   173
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00004_1",
+  "split": "train",
+  "box": [
+   1394,
+   2005,
+   44,
+   197
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00004_2",
+  "split": "train",
+  "box": [
+   1299,
+   2431,
+   54,
+   114
+  ],
+  "status": "new",
+  "match_iou": 0.032,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00004_2",
+  "split": "train",
+  "box": [
+   1265,
+   1024,
+   55,
+   148
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00004_2",
+  "split": "train",
+  "box": [
+   991,
+   1312,
+   37,
+   123
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00004_2",
+  "split": "train",
+  "box": [
+   993,
+   2514,
+   52,
+   154
+  ],
+  "status": "new",
+  "match_iou": 0.062,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00005_2",
+  "split": "train",
+  "box": [
+   1137,
+   1900,
+   52,
+   144
+  ],
+  "status": "new",
+  "match_iou": 0.056,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00005_2",
+  "split": "train",
+  "box": [
+   987,
+   1924,
+   48,
+   185
+  ],
+  "status": "new",
+  "match_iou": 0.006,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00005_2",
+  "split": "train",
+  "box": [
+   824,
+   2607,
+   56,
+   122
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00006_1",
+  "split": "train",
+  "box": [
+   692,
+   919,
+   47,
+   180
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00007_2",
+  "split": "train",
+  "box": [
+   1142,
+   1266,
+   79,
+   194
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00007_2",
+  "split": "train",
+  "box": [
+   1141,
+   2016,
+   41,
+   221
+  ],
+  "status": "new",
+  "match_iou": 0.088,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00007_2",
+  "split": "train",
+  "box": [
+   697,
+   2773,
+   48,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.061,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00007_2",
+  "split": "train",
+  "box": [
+   566,
+   635,
+   57,
+   122
+  ],
+  "status": "new",
+  "match_iou": 0.013,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00009_1",
+  "split": "train",
+  "box": [
+   693,
+   1016,
+   43,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00009_1",
+  "split": "train",
+  "box": [
+   706,
+   1642,
+   41,
+   161
+  ],
+  "status": "new",
+  "match_iou": 0.015,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00010_1",
+  "split": "train",
+  "box": [
+   1160,
+   2087,
+   37,
+   150
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00010_1",
+  "split": "train",
+  "box": [
+   407,
+   1401,
+   70,
+   146
+  ],
+  "status": "new",
+  "match_iou": 0.029,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00010_2",
+  "split": "train",
+  "box": [
+   1761,
+   2800,
+   61,
+   116
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00011_2",
+  "split": "train",
+  "box": [
+   1737,
+   2842,
+   96,
+   157
+  ],
+  "status": "new",
+  "match_iou": 0.01,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00011_2",
+  "split": "train",
+  "box": [
+   1614,
+   2674,
+   42,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00011_2",
+  "split": "train",
+  "box": [
+   704,
+   2893,
+   47,
+   107
+  ],
+  "status": "new",
+  "match_iou": 0.034,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00012_1",
+  "split": "train",
+  "box": [
+   691,
+   2466,
+   47,
+   148
+  ],
+  "status": "new",
+  "match_iou": 0.025,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_1",
+  "split": "train",
+  "box": [
+   1167,
+   1971,
+   71,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.027,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_1",
+  "split": "train",
+  "box": [
+   852,
+   634,
+   43,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.058,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_1",
+  "split": "train",
+  "box": [
+   265,
+   1252,
+   58,
+   108
+  ],
+  "status": "new",
+  "match_iou": 0.085,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_2",
+  "split": "train",
+  "box": [
+   1466,
+   495,
+   46,
+   152
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_2",
+  "split": "train",
+  "box": [
+   1477,
+   1672,
+   44,
+   145
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_2",
+  "split": "train",
+  "box": [
+   1172,
+   1796,
+   37,
+   133
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_2",
+  "split": "train",
+  "box": [
+   579,
+   721,
+   67,
+   119
+  ],
+  "status": "new",
+  "match_iou": 0.039,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_2",
+  "split": "train",
+  "box": [
+   136,
+   2073,
+   49,
+   137
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00013_2",
+  "split": "train",
+  "box": [
+   731,
+   2549,
+   44,
+   140
+  ],
+  "status": "new",
+  "match_iou": 0.027,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00014_1",
+  "split": "train",
+  "box": [
+   220,
+   496,
+   43,
+   209
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00014_1",
+  "split": "train",
+  "box": [
+   535,
+   1033,
+   43,
+   138
+  ],
+  "status": "new",
+  "match_iou": 0.016,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00014_1",
+  "split": "train",
+  "box": [
+   90,
+   1654,
+   71,
+   135
+  ],
+  "status": "new",
+  "match_iou": 0.044,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00014_2",
+  "split": "train",
+  "box": [
+   1168,
+   1187,
+   50,
+   162
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00014_2",
+  "split": "train",
+  "box": [
+   859,
+   2572,
+   50,
+   154
+  ],
+  "status": "new",
+  "match_iou": 0.02,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00014_2",
+  "split": "train",
+  "box": [
+   416,
+   2157,
+   45,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.02,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00014_2",
+  "split": "train",
+  "box": [
+   139,
+   1662,
+   48,
+   167
+  ],
+  "status": "new",
+  "match_iou": 0.054,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00015_1",
+  "split": "train",
+  "box": [
+   1117,
+   488,
+   62,
+   147
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00015_1",
+  "split": "train",
+  "box": [
+   1151,
+   2198,
+   64,
+   172
+  ],
+  "status": "new",
+  "match_iou": 0.028,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00015_2",
+  "split": "train",
+  "box": [
+   281,
+   1628,
+   72,
+   137
+  ],
+  "status": "new",
+  "match_iou": 0.035,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00015_2",
+  "split": "train",
+  "box": [
+   144,
+   2260,
+   62,
+   134
+  ],
+  "status": "new",
+  "match_iou": 0.016,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00016_2",
+  "split": "train",
+  "box": [
+   1740,
+   1064,
+   49,
+   253
+  ],
+  "status": "new",
+  "match_iou": 0.002,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00016_2",
+  "split": "train",
+  "box": [
+   834,
+   1435,
+   82,
+   200
+  ],
+  "status": "new",
+  "match_iou": 0.022,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00016_2",
+  "split": "train",
+  "box": [
+   412,
+   1356,
+   51,
+   164
+  ],
+  "status": "new",
+  "match_iou": 0.059,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00016_2",
+  "split": "train",
+  "box": [
+   561,
+   1768,
+   59,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00017_1",
+  "split": "train",
+  "box": [
+   1433,
+   1011,
+   38,
+   171
+  ],
+  "status": "new",
+  "match_iou": 0.004,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00017_2",
+  "split": "train",
+  "box": [
+   1778,
+   1164,
+   57,
+   139
+  ],
+  "status": "new",
+  "match_iou": 0.002,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00017_2",
+  "split": "train",
+  "box": [
+   1627,
+   2141,
+   63,
+   139
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00017_2",
+  "split": "train",
+  "box": [
+   1038,
+   827,
+   40,
+   165
+  ],
+  "status": "new",
+  "match_iou": 0.038,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00017_2",
+  "split": "train",
+  "box": [
+   1017,
+   2087,
+   51,
+   219
+  ],
+  "status": "new",
+  "match_iou": 0.087,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_1",
+  "split": "train",
+  "box": [
+   1318,
+   1860,
+   51,
+   157
+  ],
+  "status": "new",
+  "match_iou": 0.139,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_1",
+  "split": "train",
+  "box": [
+   417,
+   2737,
+   103,
+   162
+  ],
+  "status": "new",
+  "match_iou": 0.024,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_1",
+  "split": "train",
+  "box": [
+   145,
+   2830,
+   70,
+   178
+  ],
+  "status": "new",
+  "match_iou": 0.002,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_1",
+  "split": "train",
+  "box": [
+   119,
+   1562,
+   52,
+   214
+  ],
+  "status": "new",
+  "match_iou": 0.055,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_1",
+  "split": "train",
+  "box": [
+   261,
+   2387,
+   105,
+   195
+  ],
+  "status": "new",
+  "match_iou": 0.011,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_1",
+  "split": "train",
+  "box": [
+   217,
+   720,
+   106,
+   182
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_1",
+  "split": "train",
+  "box": [
+   248,
+   995,
+   51,
+   201
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00019_1",
+  "split": "train",
+  "box": [
+   421,
+   1650,
+   48,
+   151
+  ],
+  "status": "new",
+  "match_iou": 0.053,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00020_1",
+  "split": "train",
+  "box": [
+   1729,
+   2495,
+   61,
+   123
+  ],
+  "status": "new",
+  "match_iou": 0.03,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00020_2",
+  "split": "train",
+  "box": [
+   1299,
+   642,
+   63,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00021_1",
+  "split": "train",
+  "box": [
+   1136,
+   1662,
+   46,
+   157
+  ],
+  "status": "new",
+  "match_iou": 0.07,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00021_1",
+  "split": "train",
+  "box": [
+   559,
+   2612,
+   52,
+   119
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00021_1",
+  "split": "train",
+  "box": [
+   256,
+   2514,
+   44,
+   135
+  ],
+  "status": "new",
+  "match_iou": 0.09,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00021_2",
+  "split": "train",
+  "box": [
+   119,
+   672,
+   38,
+   118
+  ],
+  "status": "new",
+  "match_iou": 0.018,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00022_1",
+  "split": "train",
+  "box": [
+   1586,
+   1640,
+   52,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.099,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00022_1",
+  "split": "train",
+  "box": [
+   1599,
+   2248,
+   41,
+   113
+  ],
+  "status": "new",
+  "match_iou": 0.104,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00022_1",
+  "split": "train",
+  "box": [
+   253,
+   2591,
+   61,
+   138
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00023_1",
+  "split": "train",
+  "box": [
+   1723,
+   627,
+   59,
+   129
+  ],
+  "status": "new",
+  "match_iou": 0.011,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00023_1",
+  "split": "train",
+  "box": [
+   1437,
+   1241,
+   45,
+   166
+  ],
+  "status": "new",
+  "match_iou": 0.013,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00023_2",
+  "split": "train",
+  "box": [
+   862,
+   1567,
+   42,
+   131
+  ],
+  "status": "new",
+  "match_iou": 0.019,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00025_1",
+  "split": "train",
+  "box": [
+   1706,
+   1404,
+   80,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00025_1",
+  "split": "train",
+  "box": [
+   1444,
+   1529,
+   50,
+   159
+  ],
+  "status": "new",
+  "match_iou": 0.04,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00025_1",
+  "split": "train",
+  "box": [
+   1011,
+   2203,
+   72,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.054,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00025_1",
+  "split": "train",
+  "box": [
+   551,
+   1701,
+   70,
+   124
+  ],
+  "status": "new",
+  "match_iou": 0.006,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00025_1",
+  "split": "train",
+  "box": [
+   407,
+   2288,
+   48,
+   172
+  ],
+  "status": "new",
+  "match_iou": 0.034,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00026_1",
+  "split": "train",
+  "box": [
+   1441,
+   863,
+   38,
+   132
+  ],
+  "status": "new",
+  "match_iou": 0.019,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00026_1",
+  "split": "train",
+  "box": [
+   677,
+   886,
+   85,
+   172
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00026_1",
+  "split": "train",
+  "box": [
+   705,
+   2305,
+   52,
+   150
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00027_2",
+  "split": "train",
+  "box": [
+   691,
+   903,
+   91,
+   159
+  ],
+  "status": "new",
+  "match_iou": 0.024,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00027_2",
+  "split": "train",
+  "box": [
+   669,
+   2102,
+   98,
+   182
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00027_2",
+  "split": "train",
+  "box": [
+   116,
+   2343,
+   50,
+   193
+  ],
+  "status": "new",
+  "match_iou": 0.021,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00030_1",
+  "split": "train",
+  "box": [
+   1294,
+   1726,
+   44,
+   150
+  ],
+  "status": "new",
+  "match_iou": 0.018,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00030_1",
+  "split": "train",
+  "box": [
+   560,
+   2597,
+   52,
+   108
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00030_1",
+  "split": "train",
+  "box": [
+   381,
+   1219,
+   65,
+   126
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00030_1",
+  "split": "train",
+  "box": [
+   89,
+   978,
+   42,
+   160
+  ],
+  "status": "new",
+  "match_iou": 0.012,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00031_1",
+  "split": "train",
+  "box": [
+   1726,
+   1545,
+   70,
+   149
+  ],
+  "status": "new",
+  "match_iou": 0.004,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00031_2",
+  "split": "train",
+  "box": [
+   1714,
+   2882,
+   76,
+   120
+  ],
+  "status": "new",
+  "match_iou": 0.027,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00014_2",
+  "split": "train",
+  "box": [
+   1931,
+   3132,
+   176,
+   281
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00017_1",
+  "split": "train",
+  "box": [
+   2029,
+   2913,
+   78,
+   241
+  ],
+  "status": "new",
+  "match_iou": 0.099,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00019_2",
+  "split": "train",
+  "box": [
+   509,
+   1161,
+   101,
+   122
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00020_2",
+  "split": "train",
+  "box": [
+   2491,
+   899,
+   98,
+   210
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00021_1",
+  "split": "train",
+  "box": [
+   2193,
+   1198,
+   202,
+   225
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_2",
+  "split": "train",
+  "box": [
+   1076,
+   809,
+   161,
+   161
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_2",
+  "split": "train",
+  "box": [
+   768,
+   2434,
+   203,
+   203
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_2",
+  "split": "train",
+  "box": [
+   818,
+   812,
+   136,
+   256
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_2",
+  "split": "train",
+  "box": [
+   787,
+   1104,
+   164,
+   181
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00030_1",
+  "split": "train",
+  "box": [
+   1464,
+   2366,
+   95,
+   194
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00032_2",
+  "split": "train",
+  "box": [
+   1242,
+   2072,
+   161,
+   204
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00032_2",
+  "split": "train",
+  "box": [
+   1261,
+   2307,
+   144,
+   151
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00032_2",
+  "split": "train",
+  "box": [
+   297,
+   3185,
+   52,
+   112
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00035_2",
+  "split": "train",
+  "box": [
+   557,
+   4054,
+   81,
+   68
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00036_1",
+  "split": "train",
+  "box": [
+   327,
+   2160,
+   114,
+   250
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00036_2",
+  "split": "train",
+  "box": [
+   914,
+   1154,
+   133,
+   214
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00036_2",
+  "split": "train",
+  "box": [
+   512,
+   1520,
+   148,
+   230
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00038_2",
+  "split": "train",
+  "box": [
+   1310,
+   2040,
+   90,
+   148
+  ],
+  "status": "new",
+  "match_iou": 0.002,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00039_2",
+  "split": "train",
+  "box": [
+   2114,
+   1301,
+   203,
+   242
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00040_1",
+  "split": "train",
+  "box": [
+   124,
+   1295,
+   136,
+   183
+  ],
+  "status": "new",
+  "match_iou": 0.018,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00041_1",
+  "split": "train",
+  "box": [
+   1453,
+   2641,
+   170,
+   183
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00041_1",
+  "split": "train",
+  "box": [
+   1467,
+   3342,
+   163,
+   208
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00047_2",
+  "split": "train",
+  "box": [
+   1151,
+   2724,
+   101,
+   106
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00047_2",
+  "split": "train",
+  "box": [
+   1161,
+   2858,
+   78,
+   104
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00047_2",
+  "split": "train",
+  "box": [
+   1165,
+   2971,
+   74,
+   138
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00047_2",
+  "split": "train",
+  "box": [
+   1151,
+   3114,
+   122,
+   141
+  ],
+  "status": "new",
+  "match_iou": 0.074,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00005_2",
+  "split": "train",
+  "box": [
+   2419,
+   822,
+   158,
+   172
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00006_1",
+  "split": "train",
+  "box": [
+   266,
+   1039,
+   168,
+   192
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00011_2",
+  "split": "train",
+  "box": [
+   2706,
+   762,
+   177,
+   238
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00017_1",
+  "split": "train",
+  "box": [
+   2330,
+   2118,
+   104,
+   250
+  ],
+  "status": "new",
+  "match_iou": 0.029,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00027_1",
+  "split": "train",
+  "box": [
+   1900,
+   2165,
+   102,
+   177
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00030_1",
+  "split": "train",
+  "box": [
+   2087,
+   1977,
+   95,
+   153
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00030_1",
+  "split": "train",
+  "box": [
+   1666,
+   2631,
+   70,
+   238
+  ],
+  "status": "new",
+  "match_iou": 0.023,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00031_1",
+  "split": "train",
+  "box": [
+   873,
+   1898,
+   94,
+   219
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00033_1",
+  "split": "train",
+  "box": [
+   1251,
+   2904,
+   89,
+   201
+  ],
+  "status": "new",
+  "match_iou": 0.013,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00033_2",
+  "split": "train",
+  "box": [
+   1159,
+   2884,
+   95,
+   199
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00034_1",
+  "split": "train",
+  "box": [
+   1278,
+   3226,
+   92,
+   219
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00034_1",
+  "split": "train",
+  "box": [
+   678,
+   3809,
+   95,
+   255
+  ],
+  "status": "new",
+  "match_iou": 0.006,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00034_2",
+  "split": "train",
+  "box": [
+   953,
+   3837,
+   78,
+   192
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00034_2",
+  "split": "train",
+  "box": [
+   564,
+   2496,
+   56,
+   175
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00035_1",
+  "split": "train",
+  "box": [
+   2094,
+   1692,
+   88,
+   233
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00035_2",
+  "split": "train",
+  "box": [
+   2424,
+   2693,
+   97,
+   189
+  ],
+  "status": "new",
+  "match_iou": 0.006,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00035_2",
+  "split": "train",
+  "box": [
+   2199,
+   2174,
+   119,
+   225
+  ],
+  "status": "new",
+  "match_iou": 0.013,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00035_2",
+  "split": "train",
+  "box": [
+   953,
+   2390,
+   100,
+   197
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00035_2",
+  "split": "train",
+  "box": [
+   756,
+   3390,
+   122,
+   203
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00040_2",
+  "split": "train",
+  "box": [
+   2582,
+   1150,
+   66,
+   226
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00040_2",
+  "split": "train",
+  "box": [
+   1745,
+   1500,
+   96,
+   231
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00042_1",
+  "split": "train",
+  "box": [
+   508,
+   2277,
+   101,
+   197
+  ],
+  "status": "new",
+  "match_iou": 0.009,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00044_1",
+  "split": "train",
+  "box": [
+   121,
+   2346,
+   78,
+   188
+  ],
+  "status": "new",
+  "match_iou": 0.003,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00044_1",
+  "split": "train",
+  "box": [
+   1107,
+   3232,
+   123,
+   155
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00049_1",
+  "split": "train",
+  "box": [
+   175,
+   1538,
+   83,
+   209
+  ],
+  "status": "new",
+  "match_iou": 0.029,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00049_1",
+  "split": "train",
+  "box": [
+   362,
+   2582,
+   83,
+   175
+  ],
+  "status": "new",
+  "match_iou": 0.012,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00052_1",
+  "split": "train",
+  "box": [
+   210,
+   3099,
+   98,
+   194
+  ],
+  "status": "new",
+  "match_iou": 0.011,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00055_1",
+  "split": "train",
+  "box": [
+   1421,
+   2619,
+   106,
+   178
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00055_2",
+  "split": "train",
+  "box": [
+   2495,
+   1367,
+   69,
+   279
+  ],
+  "status": "new",
+  "match_iou": 0.039,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00004_2",
+  "split": "train",
+  "box": [
+   820,
+   244,
+   135,
+   175
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00008_2",
+  "split": "train",
+  "box": [
+   1918,
+   957,
+   88,
+   139
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00008_2",
+  "split": "train",
+  "box": [
+   1913,
+   1096,
+   92,
+   119
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00008_2",
+  "split": "train",
+  "box": [
+   1917,
+   1225,
+   72,
+   133
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00008_2",
+  "split": "train",
+  "box": [
+   1918,
+   1357,
+   72,
+   135
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00008_2",
+  "split": "train",
+  "box": [
+   730,
+   1089,
+   122,
+   168
+  ],
+  "status": "new",
+  "match_iou": 0.028,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00008_2",
+  "split": "train",
+  "box": [
+   723,
+   1283,
+   125,
+   171
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00008_2",
+  "split": "train",
+  "box": [
+   748,
+   1462,
+   103,
+   145
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021869",
+  "page": "200021869_00014_1",
+  "split": "train",
+  "box": [
+   887,
+   799,
+   58,
+   100
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00009_2",
+  "split": "train",
+  "box": [
+   1489,
+   1963,
+   48,
+   147
+  ],
+  "status": "new",
+  "match_iou": 0.131,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00013_2",
+  "split": "train",
+  "box": [
+   325,
+   737,
+   83,
+   128
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.881,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0405",
+   "box": [
+    321,
+    734,
+    86,
+    137
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00013_2",
+  "split": "train",
+  "box": [
+   329,
+   2948,
+   85,
+   147
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.875,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0427",
+   "box": [
+    327,
+    2953,
+    86,
+    152
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249376",
+  "page": "100249376_00029_1",
+  "split": "valid",
+  "box": [
+   604,
+   793,
+   66,
+   122
+  ],
+  "status": "near",
+  "match_iou": 0.474,
+  "match": {
+   "unicode": "U+3068",
+   "char_id": "C0093",
+   "box": [
+    616,
+    825,
+    44,
+    97
+   ],
+   "user_added": false
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00004_2",
+  "split": "valid",
+  "box": [
+   1373,
+   1296,
+   94,
+   138
+  ],
+  "status": "near",
+  "match_iou": 0.351,
+  "match": {
+   "unicode": "U+3068",
+   "char_id": "C0046",
+   "box": [
+    1381,
+    1329,
+    44,
+    109
+   ],
+   "user_added": false
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "100249416",
+  "page": "100249416_00004_2",
+  "split": "valid",
+  "box": [
+   537,
+   1124,
+   104,
+   145
+  ],
+  "status": "near",
+  "match_iou": 0.341,
+  "match": {
+   "unicode": "U+3068",
+   "char_id": "C0144",
+   "box": [
+    559,
+    1161,
+    48,
+    111
+   ],
+   "user_added": false
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00030_1",
+  "split": "valid",
+  "box": [
+   1541,
+   2158,
+   64,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00030_1",
+  "split": "valid",
+  "box": [
+   965,
+   2284,
+   91,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00030_1",
+  "split": "valid",
+  "box": [
+   407,
+   2149,
+   89,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.016,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00097_1",
+  "split": "valid",
+  "box": [
+   1746,
+   1621,
+   74,
+   141
+  ],
+  "status": "new",
+  "match_iou": 0.012,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00097_1",
+  "split": "valid",
+  "box": [
+   443,
+   2419,
+   97,
+   121
+  ],
+  "status": "new",
+  "match_iou": 0.061,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00117_1",
+  "split": "valid",
+  "box": [
+   1225,
+   1654,
+   99,
+   93
+  ],
+  "status": "new",
+  "match_iou": 0.036,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200015843",
+  "page": "200015843_00117_1",
+  "split": "valid",
+  "box": [
+   1243,
+   1749,
+   47,
+   68
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200017458",
+  "page": "200017458_00030_2",
+  "split": "valid",
+  "box": [
+   190,
+   1222,
+   45,
+   118
+  ],
+  "status": "new",
+  "match_iou": 0.038,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00018_1",
+  "split": "valid",
+  "box": [
+   183,
+   1292,
+   41,
+   147
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00023_1",
+  "split": "valid",
+  "box": [
+   162,
+   1563,
+   51,
+   150
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00038_1",
+  "split": "valid",
+  "box": [
+   174,
+   2082,
+   34,
+   207
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200020019",
+  "page": "200020019_00073_2",
+  "split": "valid",
+  "box": [
+   1319,
+   1801,
+   46,
+   168
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00008_2",
+  "split": "valid",
+  "box": [
+   692,
+   2426,
+   45,
+   127
+  ],
+  "status": "new",
+  "match_iou": 0.062,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00008_2",
+  "split": "valid",
+  "box": [
+   540,
+   2419,
+   42,
+   134
+  ],
+  "status": "new",
+  "match_iou": 0.065,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00008_2",
+  "split": "valid",
+  "box": [
+   567,
+   1124,
+   44,
+   139
+  ],
+  "status": "new",
+  "match_iou": 0.093,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00008_2",
+  "split": "valid",
+  "box": [
+   424,
+   1154,
+   42,
+   148
+  ],
+  "status": "new",
+  "match_iou": 0.051,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00009_2",
+  "split": "valid",
+  "box": [
+   1305,
+   2356,
+   48,
+   156
+  ],
+  "status": "new",
+  "match_iou": 0.071,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00011_1",
+  "split": "valid",
+  "box": [
+   1294,
+   492,
+   43,
+   173
+  ],
+  "status": "new",
+  "match_iou": 0.013,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00011_1",
+  "split": "valid",
+  "box": [
+   999,
+   1753,
+   39,
+   151
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00011_1",
+  "split": "valid",
+  "box": [
+   834,
+   738,
+   48,
+   131
+  ],
+  "status": "new",
+  "match_iou": 0.046,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00026_2",
+  "split": "valid",
+  "box": [
+   696,
+   2868,
+   56,
+   141
+  ],
+  "status": "new",
+  "match_iou": 0.048,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00026_2",
+  "split": "valid",
+  "box": [
+   720,
+   622,
+   65,
+   104
+  ],
+  "status": "new",
+  "match_iou": 0.008,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00027_1",
+  "split": "valid",
+  "box": [
+   1588,
+   908,
+   66,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.004,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00027_1",
+  "split": "valid",
+  "box": [
+   69,
+   513,
+   54,
+   159
+  ],
+  "status": "new",
+  "match_iou": 0.007,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00027_1",
+  "split": "valid",
+  "box": [
+   230,
+   845,
+   54,
+   127
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00028_1",
+  "split": "valid",
+  "box": [
+   1712,
+   850,
+   70,
+   143
+  ],
+  "status": "new",
+  "match_iou": 0.004,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00028_1",
+  "split": "valid",
+  "box": [
+   1719,
+   1824,
+   59,
+   106
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00028_1",
+  "split": "valid",
+  "box": [
+   695,
+   1933,
+   43,
+   193
+  ],
+  "status": "new",
+  "match_iou": 0.029,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00028_1",
+  "split": "valid",
+  "box": [
+   117,
+   2312,
+   50,
+   198
+  ],
+  "status": "new",
+  "match_iou": 0.028,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00028_2",
+  "split": "valid",
+  "box": [
+   1450,
+   776,
+   46,
+   126
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00028_2",
+  "split": "valid",
+  "box": [
+   704,
+   879,
+   70,
+   122
+  ],
+  "status": "new",
+  "match_iou": 0.021,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00028_2",
+  "split": "valid",
+  "box": [
+   403,
+   885,
+   44,
+   157
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00032_1",
+  "split": "valid",
+  "box": [
+   1710,
+   961,
+   74,
+   121
+  ],
+  "status": "new",
+  "match_iou": 0.005,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00032_1",
+  "split": "valid",
+  "box": [
+   1726,
+   2652,
+   44,
+   141
+  ],
+  "status": "new",
+  "match_iou": 0.057,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021086",
+  "page": "200021086_00032_1",
+  "split": "valid",
+  "box": [
+   1448,
+   1556,
+   44,
+   144
+  ],
+  "status": "new",
+  "match_iou": 0.037,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00022_2",
+  "split": "valid",
+  "box": [
+   355,
+   2355,
+   189,
+   244
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_1",
+  "split": "valid",
+  "box": [
+   2316,
+   1063,
+   112,
+   153
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_1",
+  "split": "valid",
+  "box": [
+   2252,
+   2323,
+   115,
+   270
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_1",
+  "split": "valid",
+  "box": [
+   2261,
+   2595,
+   174,
+   268
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_1",
+  "split": "valid",
+  "box": [
+   1794,
+   657,
+   199,
+   234
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_1",
+  "split": "valid",
+  "box": [
+   1720,
+   2421,
+   222,
+   231
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00023_1",
+  "split": "valid",
+  "box": [
+   740,
+   2460,
+   158,
+   282
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00026_2",
+  "split": "valid",
+  "box": [
+   264,
+   3919,
+   141,
+   190
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021763",
+  "page": "200021763_00035_1",
+  "split": "valid",
+  "box": [
+   2246,
+   871,
+   159,
+   198
+  ],
+  "status": "new",
+  "match_iou": 0.0,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00048_2",
+  "split": "valid",
+  "box": [
+   717,
+   2554,
+   92,
+   200
+  ],
+  "status": "new",
+  "match_iou": 0.035,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200021802",
+  "page": "200021802_00051_1",
+  "split": "valid",
+  "box": [
+   1536,
+   2044,
+   78,
+   194
+  ],
+  "status": "new",
+  "match_iou": 0.015,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00005_2",
+  "split": "valid",
+  "box": [
+   2122,
+   3061,
+   38,
+   130
+  ],
+  "status": "new",
+  "match_iou": 0.013,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00005_2",
+  "split": "valid",
+  "box": [
+   1516,
+   1657,
+   83,
+   127
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.862,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0181",
+   "box": [
+    1509,
+    1660,
+    92,
+    127
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00011_2",
+  "split": "valid",
+  "box": [
+   1675,
+   685,
+   79,
+   153
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.857,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0125",
+   "box": [
+    1670,
+    675,
+    86,
+    164
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00011_2",
+  "split": "valid",
+  "box": [
+   1528,
+   1099,
+   81,
+   138
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.863,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0160",
+   "box": [
+    1528,
+    1085,
+    83,
+    156
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00012_2",
+  "split": "valid",
+  "box": [
+   2208,
+   885,
+   79,
+   146
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.844,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0007",
+   "box": [
+    2207,
+    875,
+    76,
+    163
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00012_2",
+  "split": "valid",
+  "box": [
+   545,
+   393,
+   116,
+   90
+  ],
+  "status": "new",
+  "match_iou": 0.047,
+  "match": null,
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00012_2",
+  "split": "valid",
+  "box": [
+   597,
+   1950,
+   75,
+   142
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.787,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0361",
+   "box": [
+    591,
+    1940,
+    84,
+    161
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ },
+ {
+  "book": "200022050",
+  "page": "200022050_00012_2",
+  "split": "valid",
+  "box": [
+   171,
+   3138,
+   74,
+   126
+  ],
+  "status": "conflict_user",
+  "match_iou": 0.872,
+  "match": {
+   "unicode": "U+E00A",
+   "char_id": "C0470",
+   "box": [
+    168,
+    3139,
+    78,
+    135
+   ],
+   "user_added": true
+  },
+  "in_corrected_list": true
+ }
+]

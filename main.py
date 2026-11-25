@@ -2,11 +2,14 @@
 くずし字列分割アノテーションツール - FastAPI Backend
 """
 
-from dataclasses import dataclass
+from collections import OrderedDict
+from collections.abc import Mapping
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal, Optional, cast
 
+import asyncio
 import csv
 import json
 import math
@@ -16,16 +19,20 @@ import subprocess
 import threading
 import uuid
 
+import numpy as np
 import pandas as pd
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from PIL import Image
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+import kcr_import
 
 # ===== 設定 =====
 RAW_DIR = Path("raw")
+RAW_CSV_DIR = Path("raw_csv")
 OUTPUT_DIR = Path("output")
 OUTPUT_SEG_DIR = Path("output_seg")
 OUTPUT_MODEL_DIR = Path("output_models")
@@ -33,15 +40,28 @@ IMAGE_CACHE_DIR = Path(".cache") / "page_images"
 PROJECT_ROOT = Path(__file__).resolve().parent
 APP_HOST = "127.0.0.1"
 APP_PORT = 8100
-APP_RELOAD = True
+APP_RELOAD_ENV_VAR = "KUZUSHIJI_RELOAD"
+
+
+def resolve_app_reload(env: Optional[Mapping[str, str]] = None) -> bool:
+    """環境変数からリロード有効化フラグを判定する（通常起動は無効）"""
+    source = os.environ if env is None else env
+    raw_value = source.get(APP_RELOAD_ENV_VAR, "")
+    return raw_value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+APP_RELOAD = resolve_app_reload()
 APP_RELOAD_DIRS = [str(Path(__file__).resolve().parent)]
 APP_RELOAD_EXCLUDES = [
     ".venv/*",
     ".cache/*",
     "raw/*",
+    "raw_csv/*",
     "output/*",
     "output_seg/*",
     "output_models/*",
+    "kcr_import/backups/*",
+    "kcr_import/decisions.jsonl",
 ]
 INDEX_FILENAME = "column_annotation.index"
 MODEL_VERSION = 1
@@ -56,6 +76,8 @@ HF_UPDATE_OUTPUT_DIR = Path("hf_output")
 HF_DEFAULT_DATASET_NAME_PREFIX = "kuzushiji-dataset"
 HF_DEFAULT_DATASET_TYPE = "both"
 HF_DEFAULT_BBOX_FORMAT = "coco"
+WARI_COLUMNS = ["Wari ID", "Wari Part"]
+WARI_PARTS = ("right", "left")
 HF_DEFAULT_MAX_SHARD_SIZE = "500MB"
 HF_UPDATE_LOG_TAIL_LINES = 80
 DISPLAY_IMAGE_FORMAT_VERSION = "webp1800q75v1"
@@ -83,6 +105,17 @@ class CharInfo(BaseModel):
     height: int
     column_id: Optional[str] = None
     segment_id: Optional[str] = None
+    wari_id: Optional[str] = None
+    wari_part: Optional[str] = None
+
+
+class ColumnBoxData(BaseModel):
+    """列ボックス（元画像ピクセル座標の矩形）"""
+
+    x: int
+    y: int
+    width: int = Field(ge=1)
+    height: int = Field(ge=1)
 
 
 class PageData(BaseModel):
@@ -94,12 +127,14 @@ class PageData(BaseModel):
     image_height: int
     image_version: str
     characters: list[CharInfo]
+    column_boxes: dict[str, ColumnBoxData] = Field(default_factory=dict)
 
 
 class ColumnData(BaseModel):
     """列データ（保存用）"""
 
     char_ids: list[str]
+    box: Optional[ColumnBoxData] = None
 
 
 class PredictionFeedback(BaseModel):
@@ -114,12 +149,21 @@ class PredictionFeedback(BaseModel):
     saved_at: Optional[str] = None
 
 
+class WariAssignment(BaseModel):
+    """割注の文字割当（保存用）。wari_id はフロントの一時 ID で、保存時に振り直される"""
+
+    char_id: str
+    wari_id: str
+    wari_part: str
+
+
 class SaveRequest(BaseModel):
     """保存リクエスト"""
 
     book_id: str
     page_id: str
     columns: list[ColumnData]
+    wari: list[WariAssignment] = Field(default_factory=list)
     prediction_feedback: Optional[PredictionFeedback] = None
 
 
@@ -130,6 +174,8 @@ class AnnotationAlignment:
     column_by_char_id: dict[str, str]
     segment_by_char_id: dict[str, str]
     saved_char_id_by_current_char_id: dict[str, str]
+    wari_id_by_char_id: dict[str, str] = field(default_factory=dict)
+    wari_part_by_char_id: dict[str, str] = field(default_factory=dict)
 
 
 class HfDatasetUpdateRequest(BaseModel):
@@ -159,6 +205,141 @@ _HF_UPDATE_JOB: dict[str, object] = {
 }
 
 
+# ===== インメモリキャッシュ =====
+CSV_CACHE_MAX_ENTRIES = 16
+_CACHE_LOCK = threading.RLock()
+_TRAIN_LOCK = threading.Lock()
+FileSignature = tuple[int, int, int]
+_PAGE_IDS_CACHE: dict[
+    tuple[str, Optional[FileSignature], str, Optional[FileSignature]], list[str]
+] = {}
+_RAW_IMAGE_COUNTS_CACHE: dict[tuple[str, FileSignature], dict[str, int]] = {}
+_COMPLETED_PAGES_CACHE: dict[
+    tuple[str, FileSignature, str, FileSignature], set[str]
+] = {}
+_BOOK_SUMMARY_CACHE: dict[
+    tuple[str, str, str],
+    tuple[
+        tuple[
+            Optional[FileSignature],
+            Optional[FileSignature],
+            Optional[FileSignature],
+            Optional[FileSignature],
+        ],
+        dict[str, object],
+    ],
+] = {}
+_CSV_PAGE_CACHE: OrderedDict[
+    tuple[str, FileSignature], tuple[pd.DataFrame, dict[object, pd.DataFrame]]
+] = OrderedDict()
+_TRAINING_SAMPLE_ARRAY_CACHE: dict[
+    str,
+    tuple[
+        FileSignature,
+        tuple[
+            list[str],
+            np.ndarray,
+            np.ndarray,
+            list[str],
+            np.ndarray,
+            np.ndarray,
+        ],
+    ],
+] = {}
+
+
+def _file_signature(path: Path) -> Optional[FileSignature]:
+    """ファイルの更新検知用シグネチャ (mtime_ns, size, ino) を返す"""
+    try:
+        st = path.stat()
+    except OSError:
+        return None
+    return (st.st_mtime_ns, st.st_size, st.st_ino)
+
+
+def _load_csv_with_page_index(
+    csv_path: Path,
+) -> Optional[tuple[pd.DataFrame, dict[object, pd.DataFrame]]]:
+    """CSV を mtime/size/ino 検証付きでキャッシュし、Image 別グループも保持する"""
+    sig = _file_signature(csv_path)
+    if sig is None:
+        return None
+    resolved = str(csv_path.resolve())
+    key = (resolved, sig)
+    with _CACHE_LOCK:
+        cached = _CSV_PAGE_CACHE.get(key)
+        if cached is not None:
+            _CSV_PAGE_CACHE.move_to_end(key)
+            return cached
+
+    df = pd.read_csv(csv_path)
+    page_groups: dict[object, pd.DataFrame] = {}
+    if "Image" in df.columns and not df.empty:
+        for image_val, group in df.groupby("Image", sort=False):
+            page_groups[image_val] = group
+
+    entry = (df, page_groups)
+    with _CACHE_LOCK:
+        # 同一パスの古いエントリを除去
+        stale_keys = [k for k in _CSV_PAGE_CACHE if k[0] == resolved and k != key]
+        for stale in stale_keys:
+            _CSV_PAGE_CACHE.pop(stale, None)
+        _CSV_PAGE_CACHE[key] = entry
+        _CSV_PAGE_CACHE.move_to_end(key)
+        while len(_CSV_PAGE_CACHE) > CSV_CACHE_MAX_ENTRIES:
+            _CSV_PAGE_CACHE.popitem(last=False)
+    return entry
+
+
+def _get_raw_image_counts(raw_path: Path) -> dict[str, int]:
+    """座標CSVの各ページの文字数をキャッシュ付きで返す"""
+    sig = _file_signature(raw_path)
+    if sig is None:
+        return {}
+    resolved = str(raw_path.resolve())
+    key = (resolved, sig)
+    with _CACHE_LOCK:
+        cached = _RAW_IMAGE_COUNTS_CACHE.get(key)
+        if cached is not None:
+            return cached
+
+    counts = (
+        pd.read_csv(raw_path, dtype={"Image": str}, usecols=["Image"])["Image"]
+        .value_counts()
+        .to_dict()
+    )
+    result = {str(k): int(v) for k, v in counts.items()}
+    with _CACHE_LOCK:
+        stale_keys = [k for k in _RAW_IMAGE_COUNTS_CACHE if k[0] == resolved and k != key]
+        for stale in stale_keys:
+            _RAW_IMAGE_COUNTS_CACHE.pop(stale, None)
+        _RAW_IMAGE_COUNTS_CACHE[key] = result
+    return result
+
+
+def invalidate_book_caches(book_id: str) -> None:
+    """指定書籍に紐づく集計・CSV・完了ページキャッシュを無効化する"""
+    raw_root = str(RAW_DIR.resolve()) if RAW_DIR.exists() else str(RAW_DIR)
+    out_root = str(OUTPUT_DIR.resolve()) if OUTPUT_DIR.exists() else str(OUTPUT_DIR)
+    target_paths = {
+        str((OUTPUT_DIR / book_id / "column_annotation.csv").resolve()),
+        str((OUTPUT_SEG_DIR / book_id / "column_annotation.csv").resolve()),
+        str((RAW_DIR / book_id / f"{book_id}_coordinate.csv").resolve()),
+    }
+    with _CACHE_LOCK:
+        _BOOK_SUMMARY_CACHE.pop((raw_root, out_root, book_id), None)
+        for key in [k for k in _BOOK_SUMMARY_CACHE if k[2] == book_id]:
+            _BOOK_SUMMARY_CACHE.pop(key, None)
+        for key in [k for k in _COMPLETED_PAGES_CACHE if k[0] in target_paths or k[2] in target_paths]:
+            _COMPLETED_PAGES_CACHE.pop(key, None)
+        for key in [k for k in _CSV_PAGE_CACHE if k[0] in target_paths]:
+            _CSV_PAGE_CACHE.pop(key, None)
+        for key in [k for k in _PAGE_IDS_CACHE if k[0] in target_paths]:
+            _PAGE_IDS_CACHE.pop(key, None)
+        for key in [k for k in _RAW_IMAGE_COUNTS_CACHE if k[0] in target_paths]:
+            _RAW_IMAGE_COUNTS_CACHE.pop(key, None)
+
+
 # ===== ヘルパー関数 =====
 def get_book_dirs() -> list[str]:
     """書籍ディレクトリ一覧を取得"""
@@ -175,34 +356,66 @@ def get_book_dirs() -> list[str]:
 
 def get_page_ids(book_id: str) -> list[str]:
     """指定書籍のページID一覧を取得（CSVにアノテーションが存在するページのみ）"""
-    # CSVを読み込んでアノテーションが存在するページを取得
     csv_path = RAW_DIR / book_id / f"{book_id}_coordinate.csv"
-    if not csv_path.exists():
-        return []
-
-    df = pd.read_csv(csv_path)
-
-    # 画像ディレクトリを確認
     images_dir = RAW_DIR / book_id / "images"
-    if not images_dir.exists():
+    csv_sig = _file_signature(csv_path)
+    images_sig = _file_signature(images_dir)
+    if csv_sig is None or images_sig is None:
         return []
 
-    # Image列からユニークな画像名を取得し、実際に存在するものだけをページとして返す
-    pages = []
-    for image_name in df["Image"].unique():
-        image_path = images_dir / f"{image_name}.jpg"
-        if image_path.exists():
-            pages.append(image_name)
+    csv_resolved = str(csv_path.resolve())
+    images_resolved = str(images_dir.resolve())
+    cache_key = (csv_resolved, csv_sig, images_resolved, images_sig)
+    with _CACHE_LOCK:
+        cached = _PAGE_IDS_CACHE.get(cache_key)
+        if cached is not None:
+            return list(cached)
 
-    return sorted(pages)
+    df = pd.read_csv(csv_path, usecols=["Image"])
+    try:
+        existing_jpgs = {
+            entry.name
+            for entry in os.scandir(images_dir)
+            if entry.name.endswith(".jpg") and entry.is_file()
+        }
+    except OSError:
+        return []
+
+    pages = sorted(
+        [
+            image_name
+            for image_name in df["Image"].unique()
+            if f"{image_name}.jpg" in existing_jpgs
+        ]
+    )
+    with _CACHE_LOCK:
+        stale_keys = [k for k in _PAGE_IDS_CACHE if k[0] == csv_resolved and k != cache_key]
+        for stale in stale_keys:
+            _PAGE_IDS_CACHE.pop(stale, None)
+        _PAGE_IDS_CACHE[cache_key] = pages
+    return list(pages)
 
 
 def load_coordinate_csv(book_id: str) -> pd.DataFrame:
     """座標CSVを読み込み"""
     csv_path = RAW_DIR / book_id / f"{book_id}_coordinate.csv"
-    if not csv_path.exists():
+    entry = _load_csv_with_page_index(csv_path)
+    if entry is None:
         raise HTTPException(status_code=404, detail=f"CSV not found: {csv_path}")
-    return pd.read_csv(csv_path)
+    return entry[0].copy()
+
+
+def _load_coordinate_page_df(book_id: str, page_id: str) -> pd.DataFrame:
+    """座標CSVから対象ページの行のみ高速に取得"""
+    csv_path = RAW_DIR / book_id / f"{book_id}_coordinate.csv"
+    entry = _load_csv_with_page_index(csv_path)
+    if entry is None:
+        raise HTTPException(status_code=404, detail=f"CSV not found: {csv_path}")
+    df, page_groups = entry
+    page_df = page_groups.get(page_id)
+    if page_df is None:
+        return cast(pd.DataFrame, df.iloc[0:0].copy())
+    return page_df.copy()
 
 
 def _row_text(row: pd.Series, column: str) -> str:
@@ -411,28 +624,39 @@ def _fill_unassigned_chars_inside_neighbor_column(
         column_by_char_id=column_by_char_id,
         segment_by_char_id=segment_by_char_id,
         saved_char_id_by_current_char_id=alignment.saved_char_id_by_current_char_id,
+        wari_id_by_char_id=alignment.wari_id_by_char_id,
+        wari_part_by_char_id=alignment.wari_part_by_char_id,
     )
+
+
+def _matched_annotation_rows(
+    current_df: pd.DataFrame, saved_df: pd.DataFrame
+) -> dict[str, pd.Series]:
+    """表示と KCR 保存で同じ文字同一性の照合を使う"""
+    if saved_df.empty or current_df.empty:
+        return {}
+    if _page_fingerprint_matches(current_df, saved_df):
+        return {
+            _row_text(row, "Char ID"): row
+            for _, row in saved_df.iterrows()
+            if _row_text(row, "Char ID")
+        }
+    return _match_saved_rows_to_current(current_df, saved_df)
 
 
 def align_saved_annotations_to_current_page(
     current_df: pd.DataFrame, saved_df: pd.DataFrame
 ) -> AnnotationAlignment:
-    """保存済み列/セグメントを現在ページの Char ID へ再対応付けする"""
+    """保存済み列/セグメント/割注を現在ページの Char ID へ再対応付けする"""
     if saved_df.empty or current_df.empty:
-        return AnnotationAlignment({}, {}, {})
-
-    if _page_fingerprint_matches(current_df, saved_df):
-        matched_rows = {
-            _row_text(row, "Char ID"): row
-            for _, row in saved_df.iterrows()
-            if _row_text(row, "Char ID")
-        }
-    else:
-        matched_rows = _match_saved_rows_to_current(current_df, saved_df)
+        return AnnotationAlignment({}, {}, {}, {}, {})
+    matched_rows = _matched_annotation_rows(current_df, saved_df)
 
     column_by_char_id: dict[str, str] = {}
     segment_by_char_id: dict[str, str] = {}
     saved_char_id_by_current_char_id: dict[str, str] = {}
+    wari_id_by_char_id: dict[str, str] = {}
+    wari_part_by_char_id: dict[str, str] = {}
 
     for current_char_id, saved_row in matched_rows.items():
         saved_char_id = _row_text(saved_row, "Char ID")
@@ -447,10 +671,18 @@ def align_saved_annotations_to_current_page(
         if seg_id:
             segment_by_char_id[current_char_id] = seg_id
 
+        wari_id = _row_text(saved_row, "Wari ID")
+        wari_part = _row_text(saved_row, "Wari Part")
+        if wari_id and wari_part in WARI_PARTS:
+            wari_id_by_char_id[current_char_id] = wari_id
+            wari_part_by_char_id[current_char_id] = wari_part
+
     alignment = AnnotationAlignment(
         column_by_char_id=column_by_char_id,
         segment_by_char_id=segment_by_char_id,
         saved_char_id_by_current_char_id=saved_char_id_by_current_char_id,
+        wari_id_by_char_id=wari_id_by_char_id,
+        wari_part_by_char_id=wari_part_by_char_id,
     )
     return _fill_unassigned_chars_inside_neighbor_column(current_df, alignment)
 
@@ -459,13 +691,17 @@ def _load_saved_page_df(
     csv_path: Path, page_id: str, required_column: str
 ) -> pd.DataFrame:
     """保存済みCSVから対象ページの行を取得"""
-    if not csv_path.exists():
+    entry = _load_csv_with_page_index(csv_path)
+    if entry is None:
         return pd.DataFrame()
 
-    df = pd.read_csv(csv_path)
+    df, page_groups = entry
     if required_column not in df.columns:
         return pd.DataFrame()
-    return cast(pd.DataFrame, df[df["Image"] == page_id].copy())
+    page_df = page_groups.get(page_id)
+    if page_df is None:
+        return cast(pd.DataFrame, df.iloc[0:0].copy())
+    return page_df.copy()
 
 
 def load_aligned_existing_annotations(
@@ -486,6 +722,16 @@ def load_aligned_existing_annotations(
         current_page_df, segment_df
     )
 
+    # 割注は列 CSV 側の対応付けを優先し、ない文字だけセグメント CSV 側で補う
+    wari_id_by_char_id = {
+        **segment_alignment.wari_id_by_char_id,
+        **column_alignment.wari_id_by_char_id,
+    }
+    wari_part_by_char_id = {
+        **segment_alignment.wari_part_by_char_id,
+        **column_alignment.wari_part_by_char_id,
+    }
+
     return AnnotationAlignment(
         column_by_char_id=column_alignment.column_by_char_id,
         segment_by_char_id=segment_alignment.segment_by_char_id,
@@ -493,18 +739,186 @@ def load_aligned_existing_annotations(
             **column_alignment.saved_char_id_by_current_char_id,
             **segment_alignment.saved_char_id_by_current_char_id,
         },
+        wari_id_by_char_id=wari_id_by_char_id,
+        wari_part_by_char_id=wari_part_by_char_id,
     )
+
+
+# ===== 列ボックス =====
+COLUMN_BOX_COLUMNS = ["Column X", "Column Y", "Column Width", "Column Height"]
+
+
+def clamp_column_box(
+    box: ColumnBoxData, image_width: int, image_height: int
+) -> ColumnBoxData:
+    """列ボックスを画像範囲内（幅・高さ1以上）に収める"""
+    left = min(max(0, box.x), max(0, image_width - 1))
+    top = min(max(0, box.y), max(0, image_height - 1))
+    right = min(max(left + 1, box.x + box.width), image_width)
+    bottom = min(max(top + 1, box.y + box.height), image_height)
+    return ColumnBoxData(
+        x=left, y=top, width=max(1, right - left), height=max(1, bottom - top)
+    )
+
+
+def _parse_column_box_row(row: pd.Series) -> Optional[ColumnBoxData]:
+    """行の Column X/Y/Width/Height が揃っていれば列ボックスを返す"""
+    values: list[int] = []
+    for column in COLUMN_BOX_COLUMNS:
+        if column not in row.index:
+            return None
+        raw = row.get(column)
+        if pd.isna(raw):
+            return None
+        try:
+            number = float(raw)
+        except (TypeError, ValueError):
+            return None
+        if not math.isfinite(number):
+            return None
+        values.append(int(round(number)))
+    x, y, width, height = values
+    if width < 1 or height < 1:
+        return None
+    return ColumnBoxData(x=x, y=y, width=width, height=height)
+
+
+def load_saved_column_boxes(
+    book_id: str,
+    page_id: str,
+    column_ids: set[str],
+    image_width: int,
+    image_height: int,
+) -> dict[str, ColumnBoxData]:
+    """保存済みCSVから Column ID -> 列ボックスを復元する
+
+    対象は現在ページへ対応付けられた Column ID のみ。値が揃わない列は含めない。
+    """
+    if not column_ids:
+        return {}
+    saved_df = _load_saved_page_df(
+        OUTPUT_DIR / book_id / "column_annotation.csv", page_id, "Column ID"
+    )
+    if saved_df.empty:
+        return {}
+
+    result: dict[str, ColumnBoxData] = {}
+    for column_id, group in saved_df.groupby("Column ID", sort=False):
+        column_key = str(column_id).strip()
+        if column_key not in column_ids or column_key in result:
+            continue
+        for _, row in group.iterrows():
+            box = _parse_column_box_row(row)
+            if box is not None:
+                result[column_key] = clamp_column_box(box, image_width, image_height)
+                break
+    return result
+
+
+def get_completed_pages(book_id: str) -> set[str]:
+    """完了ページ(Image)の集合を返す
+
+    次の3条件をすべて満たすページを完了とする。
+    1. 列アノテーションが保存されている（column_annotation.csv に行がある）
+    2. そのページの全文字に Column ID が割り当てられている
+       保存処理はページの全文字行を書き（未割当は Column ID が空）、さらに保存行数が
+       元データ（座標CSV）のページ文字数と一致することも要求する。
+       元データの文字数が後から変わった古い保存は未完了になる
+    3. 全列に Column X/Y/Width/Height が揃っている（`_parse_column_box_row` と同じ基準）
+
+    保存CSVまたは元データの座標CSVが無い・読めない場合は空集合。
+    """
+    csv_path = OUTPUT_DIR / book_id / "column_annotation.csv"
+    raw_path = RAW_DIR / book_id / f"{book_id}_coordinate.csv"
+    csv_sig = _file_signature(csv_path)
+    raw_sig = _file_signature(raw_path)
+    if csv_sig is None or raw_sig is None:
+        return set()
+
+    csv_resolved = str(csv_path.resolve())
+    raw_resolved = str(raw_path.resolve())
+    cache_key = (csv_resolved, csv_sig, raw_resolved, raw_sig)
+    with _CACHE_LOCK:
+        cached = _COMPLETED_PAGES_CACHE.get(cache_key)
+        if cached is not None:
+            return set(cached)
+
+    required = ["Image", "Column ID", *COLUMN_BOX_COLUMNS]
+    try:
+        with csv_path.open("r", encoding="utf-8", newline="") as f:
+            header = next(csv.reader(f), [])
+        if any(column not in header for column in required):
+            completed: set[str] = set()
+            with _CACHE_LOCK:
+                _COMPLETED_PAGES_CACHE[cache_key] = completed
+            return set()
+        df = pd.read_csv(csv_path, dtype={"Image": str}, usecols=required)
+        raw_counts = _get_raw_image_counts(raw_path)
+    except (OSError, ValueError):
+        return set()
+
+    if df.empty:
+        completed = set()
+        with _CACHE_LOCK:
+            _COMPLETED_PAGES_CACHE[cache_key] = completed
+        return set()
+
+    column_id = df["Column ID"].astype("string").str.strip()
+    is_assigned = column_id.notna() & (column_id != "")
+
+    boxes = df[COLUMN_BOX_COLUMNS].apply(pd.to_numeric, errors="coerce")
+    # 非数・欠損は比較が False になり、無効扱いになる
+    is_finite = (boxes.abs() < float("inf")).all(axis=1)
+    rounded = boxes.round()
+    has_box = (
+        is_finite
+        & (rounded["Column Width"] >= 1)
+        & (rounded["Column Height"] >= 1)
+    )
+
+    rows = pd.DataFrame(
+        {
+            "Image": df["Image"],
+            "Column ID": column_id,
+            "is_assigned": is_assigned,
+            "has_box": has_box & is_assigned,
+        }
+    )
+    saved_counts = rows.groupby("Image", sort=False).size()
+    all_assigned = rows.groupby("Image", sort=False)["is_assigned"].all()
+    # 列（割当済み行の Column ID）ごとにボックスが1行でも揃っているか
+    assigned_rows = rows[rows["is_assigned"]]
+    column_has_box = assigned_rows.groupby(["Image", "Column ID"], sort=False)[
+        "has_box"
+    ].any()
+    all_columns_boxed = column_has_box.groupby(level="Image", sort=False).all()
+
+    completed = set()
+    for image, all_boxed in all_columns_boxed.items():
+        image_key = str(image)
+        if not all_boxed or not bool(all_assigned.get(image, False)):
+            continue
+        if int(saved_counts.get(image, 0)) != int(raw_counts.get(image_key, -1)):
+            continue
+        completed.add(image_key)
+
+    with _CACHE_LOCK:
+        stale_keys = [
+            k for k in _COMPLETED_PAGES_CACHE if k[0] == csv_resolved and k != cache_key
+        ]
+        for stale in stale_keys:
+            _COMPLETED_PAGES_CACHE.pop(stale, None)
+        _COMPLETED_PAGES_CACHE[cache_key] = completed
+    return set(completed)
 
 
 def load_existing_annotations(book_id: str, page_id: str) -> dict[str, str]:
     """既存のアノテーションを読み込み（Column IDのマッピング）"""
-    output_csv = OUTPUT_DIR / book_id / "column_annotation.csv"
-    if not output_csv.exists():
+    page_df = _load_saved_page_df(
+        OUTPUT_DIR / book_id / "column_annotation.csv", page_id, "Column ID"
+    )
+    if page_df.empty:
         return {}
-
-    df = pd.read_csv(output_csv)
-    # page_idはImage列の値そのもの
-    page_df = df[df["Image"] == page_id]
 
     result = {}
     for _, row in page_df.iterrows():
@@ -515,12 +929,11 @@ def load_existing_annotations(book_id: str, page_id: str) -> dict[str, str]:
 
 def load_existing_segment_annotations(book_id: str, page_id: str) -> dict[str, str]:
     """既存のセグメントアノテーションを読み込み（Segment IDのマッピング）"""
-    seg_csv = OUTPUT_SEG_DIR / book_id / "column_annotation.csv"
-    if not seg_csv.exists():
+    page_df = _load_saved_page_df(
+        OUTPUT_SEG_DIR / book_id / "column_annotation.csv", page_id, "Segment ID"
+    )
+    if page_df.empty:
         return {}
-
-    df = pd.read_csv(seg_csv)
-    page_df = df[df["Image"] == page_id]
 
     result: dict[str, str] = {}
     for _, row in page_df.iterrows():
@@ -539,21 +952,15 @@ def load_existing_segment_annotations(book_id: str, page_id: str) -> dict[str, s
     return result
 
 
-def load_existing_segment_map(book_id: str, page_id: str) -> dict[str, str]:
-    """既存のセグメント割当を読み込み（Column ID -> Segment ID）"""
-    seg_csv = OUTPUT_SEG_DIR / book_id / "column_annotation.csv"
-    if not seg_csv.exists():
-        return {}
-
-    df = pd.read_csv(seg_csv)
-    page_df = df[df["Image"] == page_id]
-    if page_df.empty:
+def _extract_segment_map_from_page_df(page_df: pd.DataFrame) -> dict[str, str]:
+    """保存済みページDataFrameから Column ID -> Segment ID のマップを抽出"""
+    if page_df.empty or "Column ID" not in page_df.columns or "Segment ID" not in page_df.columns:
         return {}
 
     result: dict[str, str] = {}
-    for _, row in page_df.iterrows():
-        col_id = row.get("Column ID")
-        seg_id = row.get("Segment ID")
+    for col_id, seg_id in zip(
+        page_df["Column ID"].tolist(), page_df["Segment ID"].tolist(), strict=False
+    ):
         if pd.isna(col_id) or pd.isna(seg_id):
             continue
         col_str = str(col_id).strip()
@@ -563,6 +970,14 @@ def load_existing_segment_map(book_id: str, page_id: str) -> dict[str, str]:
         result[col_str] = seg_str
 
     return result
+
+
+def load_existing_segment_map(book_id: str, page_id: str) -> dict[str, str]:
+    """既存のセグメント割当を読み込み（Column ID -> Segment ID）"""
+    page_df = _load_saved_page_df(
+        OUTPUT_SEG_DIR / book_id / "column_annotation.csv", page_id, "Segment ID"
+    )
+    return _extract_segment_map_from_page_df(page_df)
 
 
 def build_segment_override_from_saved_annotations(
@@ -1032,29 +1447,86 @@ def _column_boundary_samples(
     if "Column ID" not in page_df.columns:
         return [], []
 
-    work_df = page_df.dropna(subset=["Column ID", "Char ID"]).copy()
-    if len(work_df) < 2:
+    work_df = page_df.dropna(subset=["Column ID", "Char ID"])
+    n = len(work_df)
+    if n < 2:
         return [], []
 
-    work_df["char_id_num"] = work_df["Char ID"].map(_char_sort_key)
-    work_df = work_df.sort_values("char_id_num")
-    avg_width = max(1.0, float(work_df["Width"].fillna(0).mean()))
-    avg_height = max(1.0, float(work_df["Height"].fillna(0).mean()))
+    char_ids = work_df["Char ID"].tolist()
+    order = sorted(range(n), key=lambda i: _char_sort_key(char_ids[i]))
+
+    xs_raw = work_df["X"].tolist()
+    ys_raw = work_df["Y"].tolist()
+    ws_raw = work_df["Width"].tolist()
+    hs_raw = work_df["Height"].tolist()
+    cols_raw = work_df["Column ID"].tolist()
+
+    valid_w_sum = 0.0
+    valid_w_cnt = 0
+    valid_h_sum = 0.0
+    valid_h_cnt = 0
+    for w, h in zip(ws_raw, hs_raw, strict=False):
+        if pd.notna(w):
+            valid_w_sum += float(w)
+        valid_w_cnt += 1
+        if pd.notna(h):
+            valid_h_sum += float(h)
+        valid_h_cnt += 1
+    avg_width = max(1.0, valid_w_sum / valid_w_cnt) if valid_w_cnt else 1.0
+    avg_height = max(1.0, valid_h_sum / valid_h_cnt) if valid_h_cnt else 1.0
+
+    def _f(val: object, default: float = 0.0) -> float:
+        if val is None or val != val:
+            return default
+        try:
+            return float(val)  # type: ignore[arg-type]
+        except (TypeError, ValueError):
+            return default
 
     samples: list[dict[str, float]] = []
     labels: list[int] = []
-    rows = list(work_df.iterrows())
-    for idx in range(1, len(rows)):
-        _, prev_row = rows[idx - 1]
-        _, cur_row = rows[idx]
-        prev_col = str(prev_row["Column ID"]).strip()
-        cur_col = str(cur_row["Column ID"]).strip()
-        if not prev_col or not cur_col:
-            continue
-        samples.append(
-            _char_boundary_features(prev_row, cur_row, avg_width, avg_height)
-        )
-        labels.append(1 if prev_col != cur_col else 0)
+    prev_i = order[0]
+    prev_col = str(cols_raw[prev_i]).strip()
+    pl = _f(xs_raw[prev_i], 0.0)
+    pt = _f(ys_raw[prev_i], 0.0)
+    pr = pl + max(1.0, _f(ws_raw[prev_i], 1.0))
+    pb = pt + max(1.0, _f(hs_raw[prev_i], 1.0))
+    prev_cx = (pl + pr) * 0.5
+    prev_cy = (pt + pb) * 0.5
+
+    for idx in range(1, n):
+        cur_i = order[idx]
+        cur_col = str(cols_raw[cur_i]).strip()
+        cl = _f(xs_raw[cur_i], 0.0)
+        ct = _f(ys_raw[cur_i], 0.0)
+        cr = cl + max(1.0, _f(ws_raw[cur_i], 1.0))
+        cb = ct + max(1.0, _f(hs_raw[cur_i], 1.0))
+        cur_cx = (cl + cr) * 0.5
+        cur_cy = (ct + cb) * 0.5
+
+        if prev_col and cur_col:
+            x_inter = min(pr, cr) - max(pl, cl)
+            x_overlap = (
+                x_inter / max(1.0, min(pr - pl, cr - cl)) if x_inter > 0.0 else 0.0
+            )
+            y_inter = min(pb, cb) - max(pt, ct)
+            y_overlap = (
+                y_inter / max(1.0, min(pb - pt, cb - ct)) if y_inter > 0.0 else 0.0
+            )
+            samples.append(
+                {
+                    "dx": abs(cur_cx - prev_cx) / avg_width,
+                    "dy": abs(cur_cy - prev_cy) / avg_height,
+                    "upward": 1.0 if cur_cy < prev_cy else 0.0,
+                    "x_overlap": x_overlap,
+                    "y_overlap": y_overlap,
+                }
+            )
+            labels.append(1 if prev_col != cur_col else 0)
+
+        prev_col = cur_col
+        pl, pt, pr, pb = cl, ct, cr, cb
+        prev_cx, prev_cy = cur_cx, cur_cy
 
     return samples, labels
 
@@ -1063,53 +1535,116 @@ def _column_boundary_samples(
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     """メインページ"""
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
+
+
+@app.get("/kcr-import", response_class=HTMLResponse)
+async def kcr_import_page(request: Request) -> HTMLResponse:
+    """KCR 取り込み確認の専用画面を返す"""
+    return templates.TemplateResponse(request, "kcr_import.html")
+
+
+@app.get("/api/kcr-import/pages")
+def get_kcr_candidate_pages(
+    book_id: str | None = None, only_undecided: bool = False,
+) -> dict[str, object]:
+    """KCR 候補のページ一覧と進捗を返す"""
+    return kcr_import.list_candidate_pages(book_id, only_undecided)
+
+
+@app.get("/api/kcr-import/books/{book_id}/pages/{page_id}")
+async def get_kcr_candidate_page(book_id: str, page_id: str) -> dict[str, object]:
+    """通常のページデータに KCR の未判定候補を添えて返す"""
+    candidates = kcr_import.page_candidates(book_id, page_id)
+    page = await get_page_data(book_id, page_id)
+    characters = [(c.char_id, c.unicode, (c.x, c.y, c.width, c.height)) for c in page.characters]
+    output_path = OUTPUT_DIR / book_id / "column_annotation.csv"
+    return {**page.model_dump(), **kcr_import.candidate_page_fields(candidates, characters, output_path, page_id)}
+
+
+def _match_kcr_annotations(
+    current: list[kcr_import.Row], saved: list[kcr_import.Row],
+) -> dict[str, kcr_import.Row]:
+    """照合できた保存済み行の CSV 文字列をそのまま引き継ぐ"""
+    return {
+        char_id: saved[int(row.name)]
+        for char_id, row in _matched_annotation_rows(pd.DataFrame(current), pd.DataFrame(saved)).items()
+    }
+
+
+@app.post("/api/kcr-import/books/{book_id}/pages/{page_id}/save")
+async def save_kcr_candidate_page(
+    book_id: str, page_id: str, request: kcr_import.KcrSaveRequest,
+) -> dict[str, object]:
+    """KCR で判定した候補を既存のデータ経路に保存する"""
+    dirs = kcr_import.DataDirs(RAW_DIR, RAW_CSV_DIR, OUTPUT_DIR, OUTPUT_SEG_DIR)
+    result = kcr_import.apply_kcr_decisions(
+        book_id, page_id, request.decisions, dirs, _match_kcr_annotations
+    )
+    invalidate_book_caches(book_id)
+    return result
+
+
+def _get_book_summary(book_id: str) -> dict[str, object]:
+    """書籍単位の進捗サマリーをシグネチャ検証付きキャッシュで取得する"""
+    raw_csv = RAW_DIR / book_id / f"{book_id}_coordinate.csv"
+    images_dir = RAW_DIR / book_id / "images"
+    output_csv = OUTPUT_DIR / book_id / "column_annotation.csv"
+    index_path = OUTPUT_DIR / book_id / INDEX_FILENAME
+
+    signature = (
+        _file_signature(raw_csv),
+        _file_signature(images_dir),
+        _file_signature(output_csv),
+        _file_signature(index_path),
+    )
+    raw_root = str(RAW_DIR.resolve()) if RAW_DIR.exists() else str(RAW_DIR)
+    out_root = str(OUTPUT_DIR.resolve()) if OUTPUT_DIR.exists() else str(OUTPUT_DIR)
+    cache_key = (raw_root, out_root, book_id)
+
+    with _CACHE_LOCK:
+        cached = _BOOK_SUMMARY_CACHE.get(cache_key)
+        if cached is not None and cached[0] == signature:
+            return dict(cached[1])
+
+    pages = get_page_ids(book_id)
+    total_pages = len(pages)
+    pages_set = set(pages)
+
+    annotated_set: set[str] = set()
+    if signature[3] is not None:
+        annotated_set = {
+            line.strip()
+            for line in index_path.read_text().splitlines()
+            if line.strip() and line.strip() in pages_set
+        }
+    elif signature[2] is not None:
+        ann_df = pd.read_csv(output_csv, usecols=lambda c: c in {"Image", "Column ID"})
+        if "Column ID" in ann_df.columns:
+            annotated_images = ann_df[ann_df["Column ID"].notna()]["Image"].unique()
+            annotated_set = {img for img in annotated_images if img in pages_set}
+    annotated_count = len(annotated_set)
+
+    completed_count = len(get_completed_pages(book_id) & annotated_set)
+    progress = round(completed_count / total_pages * 100) if total_pages > 0 else 0
+
+    summary: dict[str, object] = {
+        "book_id": book_id,
+        "total_pages": total_pages,
+        "annotated_count": annotated_count,
+        "completed_count": completed_count,
+        "progress": progress,
+    }
+    with _CACHE_LOCK:
+        _BOOK_SUMMARY_CACHE[cache_key] = (signature, summary)
+    return dict(summary)
 
 
 @app.get("/api/books")
 async def get_books():
     """書籍一覧を取得（進捗率付き）"""
     books = get_book_dirs()
-
-    result = []
-    for book_id in books:
-        # 総ページ数を取得
-        pages = get_page_ids(book_id)
-        total_pages = len(pages)
-
-        # アノテーション済みページ数を取得
-        annotated_count = 0
-        output_csv = OUTPUT_DIR / book_id / "column_annotation.csv"
-        index_path = OUTPUT_DIR / book_id / INDEX_FILENAME
-        if index_path.exists():
-            annotated_images = {
-                line.strip()
-                for line in index_path.read_text().splitlines()
-                if line.strip()
-            }
-            for img_name in annotated_images:
-                if img_name in pages:
-                    annotated_count += 1
-        elif output_csv.exists():
-            ann_df = pd.read_csv(output_csv)
-            if "Column ID" in ann_df.columns:
-                annotated_images = ann_df[ann_df["Column ID"].notna()]["Image"].unique()
-                for img_name in annotated_images:
-                    if img_name in pages:
-                        annotated_count += 1
-
-        # 進捗率を計算
-        progress = round(annotated_count / total_pages * 100) if total_pages > 0 else 0
-
-        result.append(
-            {
-                "book_id": book_id,
-                "total_pages": total_pages,
-                "annotated_count": annotated_count,
-                "progress": progress,
-            }
-        )
-
+    result = [_get_book_summary(book_id) for book_id in books]
     return {"books": result}
 
 
@@ -1119,6 +1654,7 @@ async def get_pages(book_id: str):
     pages = get_page_ids(book_id)
     if not pages:
         raise HTTPException(status_code=404, detail=f"Book not found: {book_id}")
+    pages_set = set(pages)
 
     # 列アノテーション済みのページを取得
     annotated_pages = []
@@ -1129,25 +1665,30 @@ async def get_pages(book_id: str):
             line.strip() for line in index_path.read_text().splitlines() if line.strip()
         ]
         for img_name in annotated_images:
-            if img_name in pages:
+            if img_name in pages_set:
                 annotated_pages.append(img_name)
     elif output_csv.exists():
-        ann_df = pd.read_csv(output_csv)
+        ann_df = pd.read_csv(output_csv, usecols=lambda c: c in {"Image", "Column ID"})
         if "Column ID" in ann_df.columns:
             # Column IDが設定されているページを取得
             # page_idはImage列の値そのもの
             annotated_images = ann_df[ann_df["Column ID"].notna()]["Image"].unique()
             for img_name in annotated_images:
-                if img_name in pages:
+                if img_name in pages_set:
                     annotated_pages.append(img_name)
 
     # ソートして最後のアノテーション済みページを特定
     annotated_pages = sorted(annotated_pages)
     last_annotated = annotated_pages[-1] if annotated_pages else None
 
+    # 完了ページ（全列に明示ボックスがある）。annotated_pages の部分集合
+    completed_set = get_completed_pages(book_id)
+    completed_pages = [page for page in annotated_pages if page in completed_set]
+
     return {
         "pages": pages,
         "annotated_pages": annotated_pages,
+        "completed_pages": completed_pages,
         "last_annotated": last_annotated,
     }
 
@@ -1163,14 +1704,13 @@ async def get_page_data(book_id: str, page_id: str):
     with Image.open(image_path) as img:
         image_width, image_height = img.size
 
-    # 座標データを読み込み
-    df = load_coordinate_csv(book_id)
-    # page_idはImage列の値そのもの
-    page_df = df[df["Image"] == page_id].copy()
+    # 座標データを読み込み（対象ページのみキャッシュから取得）
+    page_df = _load_coordinate_page_df(book_id, page_id)
 
     # Char IDでソート（C0001, C0002, ...）
-    page_df["char_id_num"] = page_df["Char ID"].str.extract(r"C(\d+)").astype(int)
-    page_df = page_df.sort_values("char_id_num")
+    if not page_df.empty:
+        page_df["char_id_num"] = page_df["Char ID"].str.extract(r"C(\d+)").astype(int)
+        page_df = page_df.sort_values("char_id_num")
 
     # 既存のアノテーションを現在の文字行へ対応付けて読み込み
     existing_alignment = load_aligned_existing_annotations(book_id, page_id, page_df)
@@ -1194,8 +1734,18 @@ async def get_page_data(book_id: str, page_id: str):
                 height=int(row["Height"]),
                 column_id=existing_alignment.column_by_char_id.get(str(char_id)),
                 segment_id=existing_alignment.segment_by_char_id.get(str(char_id)),
+                wari_id=existing_alignment.wari_id_by_char_id.get(str(char_id)),
+                wari_part=existing_alignment.wari_part_by_char_id.get(str(char_id)),
             )
         )
+
+    column_boxes = load_saved_column_boxes(
+        book_id,
+        page_id,
+        set(existing_alignment.column_by_char_id.values()),
+        image_width,
+        image_height,
+    )
 
     return PageData(
         book_id=book_id,
@@ -1204,6 +1754,7 @@ async def get_page_data(book_id: str, page_id: str):
         image_height=image_height,
         image_version=get_page_image_version(image_path),
         characters=characters,
+        column_boxes=column_boxes,
     )
 
 
@@ -1212,24 +1763,37 @@ async def get_page_image(
     book_id: str,
     page_id: str,
     variant: Literal["display", "original"] = Query("display"),
+    v: Optional[str] = Query(None),
 ):
     """ページ画像を返す"""
     image_path = get_image_path(book_id, page_id)
     if not image_path.exists():
         raise HTTPException(status_code=404, detail=f"Image not found: {image_path}")
 
-    if variant == "original":
-        return FileResponse(image_path, media_type="image/jpeg")
+    cache_control = (
+        "public, max-age=31536000, immutable"
+        if v
+        else "private, max-age=60"
+    )
+    headers = {"Cache-Control": cache_control}
 
-    display_path = ensure_display_image_cache(book_id, page_id, image_path)
-    return FileResponse(display_path, media_type="image/webp")
+    if variant == "original":
+        return FileResponse(image_path, media_type="image/jpeg", headers=headers)
+
+    cache_path = get_display_image_cache_path(book_id, page_id, image_path)
+    if cache_path.exists():
+        display_path = cache_path
+    else:
+        display_path = await asyncio.to_thread(
+            ensure_display_image_cache, book_id, page_id, image_path
+        )
+    return FileResponse(display_path, media_type="image/webp", headers=headers)
 
 
 @app.get("/api/books/{book_id}/pages/{page_id}/suggestions")
 async def get_page_suggestions(book_id: str, page_id: str):
     """ページに対する列・セグメント候補を返す"""
-    df = load_coordinate_csv(book_id)
-    page_df = df[df["Image"] == page_id].copy()
+    page_df = _load_coordinate_page_df(book_id, page_id)
     if page_df.empty:
         raise HTTPException(status_code=404, detail=f"page not found: {page_id}")
 
@@ -1460,6 +2024,149 @@ def _classification_metrics(
     }
 
 
+def _samples_to_array(
+    samples: list[dict[str, float]],
+    labels: list[int],
+) -> tuple[list[str], np.ndarray, np.ndarray]:
+    """サンプル辞書リストを numpy 配列へ変換する"""
+    if not samples or not labels:
+        return [], np.empty((0, 0), dtype=np.float64), np.empty((0,), dtype=np.int8)
+    feature_names = list(samples[0].keys())
+    matrix = np.array(
+        [[float(sample.get(name, 0.0)) for name in feature_names] for sample in samples],
+        dtype=np.float64,
+    )
+    labels_arr = np.array(labels, dtype=np.int8)
+    return feature_names, matrix, labels_arr
+
+
+def _classification_metrics_from_arrays(
+    means_break: np.ndarray,
+    stds_break: np.ndarray,
+    prior_break: float,
+    means_keep: np.ndarray,
+    stds_keep: np.ndarray,
+    prior_keep: float,
+    matrix: np.ndarray,
+    labels_arr: np.ndarray,
+) -> dict[str, float]:
+    """2値分類の簡易 metrics を numpy で高速に計算する"""
+    if matrix.size == 0 or labels_arr.size == 0 or len(matrix) != len(labels_arr):
+        return {}
+
+    zb = (matrix - means_break) / stds_break
+    zk = (matrix - means_keep) / stds_keep
+    score_break = math.log(max(1e-6, prior_break)) - 0.5 * np.sum(zb * zb, axis=1)
+    score_keep = math.log(max(1e-6, prior_keep)) - 0.5 * np.sum(zk * zk, axis=1)
+    max_score = np.maximum(score_break, score_keep)
+    exp_break = np.exp(score_break - max_score)
+    exp_keep = np.exp(score_keep - max_score)
+    probs = exp_break / np.maximum(1e-6, exp_break + exp_keep)
+    pred = probs >= 0.5
+    pos = labels_arr == 1
+
+    tp = int(np.sum(pred & pos))
+    tn = int(np.sum((~pred) & (~pos)))
+    fp = int(np.sum(pred & (~pos)))
+    fn = int(np.sum((~pred) & pos))
+
+    total = tp + tn + fp + fn
+    accuracy = (tp + tn) / total if total else 0.0
+    precision = tp / (tp + fp) if (tp + fp) else 0.0
+    recall = tp / (tp + fn) if (tp + fn) else 0.0
+    f1 = (
+        2 * precision * recall / (precision + recall)
+        if (precision + recall)
+        else 0.0
+    )
+    return {
+        "accuracy": _round_metric(accuracy),
+        "precision": _round_metric(precision),
+        "recall": _round_metric(recall),
+        "f1": _round_metric(f1),
+    }
+
+
+def _fit_boundary_model_from_arrays(
+    book_id: str,
+    model_name: str,
+    feature_names: list[str],
+    matrix: np.ndarray,
+    labels_arr: np.ndarray,
+) -> dict[str, object]:
+    """numpy 配列から境界分類用の簡易統計モデルを学習する"""
+    total = int(len(labels_arr))
+    payload: dict[str, object] = {
+        "book_id": book_id,
+        "model_name": model_name,
+        "version": MODEL_VERSION,
+        "trained_at": _utc_now_iso(),
+        "available": False,
+        "sample_count": total,
+        "feature_names": feature_names,
+        "metrics": {},
+    }
+
+    if total < MIN_MODEL_SAMPLES or matrix.ndim != 2 or matrix.shape[0] != total:
+        return payload
+
+    pos_mask = labels_arr == 1
+    neg_mask = labels_arr == 0
+    pos_count = int(np.sum(pos_mask))
+    neg_count = int(np.sum(neg_mask))
+    if pos_count < 2 or neg_count < 2:
+        return payload
+
+    sub_break = matrix[pos_mask]
+    sub_keep = matrix[neg_mask]
+    means_break = sub_break.mean(axis=0)
+    stds_break = np.maximum(0.1, np.sqrt(np.maximum(sub_break.var(axis=0, ddof=1), 0.0)))
+    prior_break = pos_count / total
+
+    means_keep = sub_keep.mean(axis=0)
+    stds_keep = np.maximum(0.1, np.sqrt(np.maximum(sub_keep.var(axis=0, ddof=1), 0.0)))
+    prior_keep = neg_count / total
+
+    payload["available"] = True
+    payload["classes"] = {
+        "break": {
+            "count": pos_count,
+            "prior": prior_break,
+            "means": {
+                name: float(val)
+                for name, val in zip(feature_names, means_break.tolist(), strict=False)
+            },
+            "stds": {
+                name: float(val)
+                for name, val in zip(feature_names, stds_break.tolist(), strict=False)
+            },
+        },
+        "keep": {
+            "count": neg_count,
+            "prior": prior_keep,
+            "means": {
+                name: float(val)
+                for name, val in zip(feature_names, means_keep.tolist(), strict=False)
+            },
+            "stds": {
+                name: float(val)
+                for name, val in zip(feature_names, stds_keep.tolist(), strict=False)
+            },
+        },
+    }
+    payload["metrics"] = _classification_metrics_from_arrays(
+        means_break,
+        stds_break,
+        prior_break,
+        means_keep,
+        stds_keep,
+        prior_keep,
+        matrix,
+        labels_arr,
+    )
+    return payload
+
+
 def _fit_boundary_model(
     book_id: str,
     model_name: str,
@@ -1467,47 +2174,10 @@ def _fit_boundary_model(
     labels: list[int],
 ) -> dict[str, object]:
     """境界分類用の簡易統計モデルを学習する"""
-    feature_names = list(samples[0].keys()) if samples else []
-    payload: dict[str, object] = {
-        "book_id": book_id,
-        "model_name": model_name,
-        "version": MODEL_VERSION,
-        "trained_at": _utc_now_iso(),
-        "available": False,
-        "sample_count": len(samples),
-        "feature_names": feature_names,
-        "metrics": {},
-    }
-
-    pos_idx = [idx for idx, label in enumerate(labels) if label == 1]
-    neg_idx = [idx for idx, label in enumerate(labels) if label == 0]
-    if len(samples) < MIN_MODEL_SAMPLES or len(pos_idx) < 2 or len(neg_idx) < 2:
-        return payload
-
-    classes: dict[str, object] = {}
-    total = len(samples)
-    for class_name, indices in {"break": pos_idx, "keep": neg_idx}.items():
-        means: dict[str, float] = {}
-        stds: dict[str, float] = {}
-        for feature_name in feature_names:
-            values = [samples[idx][feature_name] for idx in indices]
-            mean_val = sum(values) / len(values)
-            variance = sum((value - mean_val) ** 2 for value in values) / max(
-                1, len(values) - 1
-            )
-            means[feature_name] = mean_val
-            stds[feature_name] = max(0.1, math.sqrt(max(variance, 0.0)))
-        classes[class_name] = {
-            "count": len(indices),
-            "prior": len(indices) / total,
-            "means": means,
-            "stds": stds,
-        }
-
-    payload["available"] = True
-    payload["classes"] = classes
-    payload["metrics"] = _classification_metrics(payload, samples, labels)
-    return payload
+    feature_names, matrix, labels_arr = _samples_to_array(samples, labels)
+    return _fit_boundary_model_from_arrays(
+        book_id, model_name, feature_names, matrix, labels_arr
+    )
 
 
 def _save_model_payload(
@@ -1636,7 +2306,7 @@ def _save_book_training_samples_cache(
     column_labels: list[int],
     segment_samples: list[dict[str, float]],
     segment_labels: list[int],
-) -> None:
+) -> tuple[list[str], np.ndarray, np.ndarray, list[str], np.ndarray, np.ndarray]:
     """書籍ごとの学習サンプルをキャッシュする"""
     cache_path = _training_sample_cache_path(book_id)
     cache_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1651,10 +2321,19 @@ def _save_book_training_samples_cache(
                 "segment_labels": segment_labels,
             },
             ensure_ascii=False,
-            indent=2,
+            separators=(",", ":"),
         ),
         encoding="utf-8",
     )
+    arrays = (
+        *_samples_to_array(column_samples, column_labels),
+        *_samples_to_array(segment_samples, segment_labels),
+    )
+    sig = _file_signature(cache_path)
+    if sig is not None:
+        with _CACHE_LOCK:
+            _TRAINING_SAMPLE_ARRAY_CACHE[str(cache_path.resolve())] = (sig, arrays)
+    return arrays
 
 
 def _load_book_training_samples_cache(
@@ -1676,6 +2355,58 @@ def _load_book_training_samples_cache(
         [int(v) for v in cast(list[object], payload.get("column_labels", []))],
         cast(list[dict[str, float]], payload.get("segment_samples", [])),
         [int(v) for v in cast(list[object], payload.get("segment_labels", []))],
+    )
+
+
+def _load_book_training_sample_arrays(
+    book_id: str,
+) -> tuple[list[str], np.ndarray, np.ndarray, list[str], np.ndarray, np.ndarray]:
+    """書籍ごとの学習サンプルを numpy 配列キャッシュ経由で取得する"""
+    cache_path = _training_sample_cache_path(book_id)
+    sig = _file_signature(cache_path)
+    if sig is not None:
+        resolved = str(cache_path.resolve())
+        with _CACHE_LOCK:
+            cached = _TRAINING_SAMPLE_ARRAY_CACHE.get(resolved)
+            if cached is not None and cached[0] == sig:
+                return cached[1]
+
+        loaded = _load_book_training_samples_cache(book_id)
+        if loaded is not None:
+            col_s, col_l, seg_s, seg_l = loaded
+            arrays = (
+                *_samples_to_array(col_s, col_l),
+                *_samples_to_array(seg_s, seg_l),
+            )
+            with _CACHE_LOCK:
+                _TRAINING_SAMPLE_ARRAY_CACHE[resolved] = (sig, arrays)
+            return arrays
+
+    col_s, col_l, seg_s, seg_l = _collect_book_training_samples(book_id)
+    return _save_book_training_samples_cache(book_id, col_s, col_l, seg_s, seg_l)
+
+
+def _concat_feature_arrays(
+    chunks: list[tuple[list[str], np.ndarray, np.ndarray]],
+) -> tuple[list[str], np.ndarray, np.ndarray]:
+    """複数書籍の numpy 特徴量配列を結合する"""
+    feature_names: list[str] = []
+    matrices: list[np.ndarray] = []
+    labels_list: list[np.ndarray] = []
+    for names, matrix, labels_arr in chunks:
+        if labels_arr.size == 0 or matrix.ndim != 2 or matrix.shape[0] == 0:
+            continue
+        if not feature_names:
+            feature_names = names
+        matrices.append(matrix)
+        labels_list.append(labels_arr)
+
+    if not matrices:
+        return [], np.empty((0, 0), dtype=np.float64), np.empty((0,), dtype=np.int8)
+    return (
+        feature_names,
+        np.concatenate(matrices, axis=0),
+        np.concatenate(labels_list, axis=0),
     )
 
 
@@ -1886,64 +2617,79 @@ def build_book_model_status(book_id: str) -> dict[str, object]:
 
 def train_book_models(book_id: str) -> dict[str, object]:
     """書籍単位と全書籍共通の列/セグメント境界モデルを学習する"""
-    column_samples, column_labels, segment_samples, segment_labels = (
-        _collect_book_training_samples(book_id)
-    )
-    _save_book_training_samples_cache(
-        book_id,
-        column_samples,
-        column_labels,
-        segment_samples,
-        segment_labels,
-    )
-    column_model = _fit_boundary_model(
-        book_id, "column_boundary_model", column_samples, column_labels
-    )
-    segment_model = _fit_boundary_model(
-        book_id,
-        "segment_boundary_model",
-        segment_samples,
-        segment_labels,
-    )
-    _save_model_payload(book_id, "column_boundary_model", column_model)
-    _save_model_payload(book_id, "segment_boundary_model", segment_model)
-    _record_training_event(book_id, column_model, segment_model)
+    with _TRAIN_LOCK:
+        column_samples, column_labels, segment_samples, segment_labels = (
+            _collect_book_training_samples(book_id)
+        )
+        col_f, col_x, col_y, seg_f, seg_x, seg_y = _save_book_training_samples_cache(
+            book_id,
+            column_samples,
+            column_labels,
+            segment_samples,
+            segment_labels,
+        )
+        column_model = _fit_boundary_model_from_arrays(
+            book_id, "column_boundary_model", col_f, col_x, col_y
+        )
+        segment_model = _fit_boundary_model_from_arrays(
+            book_id, "segment_boundary_model", seg_f, seg_x, seg_y
+        )
+        _save_model_payload(book_id, "column_boundary_model", column_model)
+        _save_model_payload(book_id, "segment_boundary_model", segment_model)
+        _record_training_event(book_id, column_model, segment_model)
 
-    (
-        global_column_samples,
-        global_column_labels,
-        global_segment_samples,
-        global_segment_labels,
-    ) = _collect_global_training_samples()
-    global_column_model = _fit_boundary_model(
-        GLOBAL_MODEL_BOOK_ID,
-        "column_boundary_model",
-        global_column_samples,
-        global_column_labels,
-    )
-    global_segment_model = _fit_boundary_model(
-        GLOBAL_MODEL_BOOK_ID,
-        "segment_boundary_model",
-        global_segment_samples,
-        global_segment_labels,
-    )
-    _save_model_payload(
-        GLOBAL_MODEL_BOOK_ID, "column_boundary_model", global_column_model
-    )
-    _save_model_payload(
-        GLOBAL_MODEL_BOOK_ID, "segment_boundary_model", global_segment_model
-    )
-    _record_training_event(
-        GLOBAL_MODEL_BOOK_ID, global_column_model, global_segment_model
-    )
+        col_chunks: list[tuple[list[str], np.ndarray, np.ndarray]] = []
+        seg_chunks: list[tuple[list[str], np.ndarray, np.ndarray]] = []
+        for other_book_id in get_book_dirs():
+            if other_book_id == book_id:
+                b_cf, b_cx, b_cy, b_sf, b_sx, b_sy = (
+                    col_f,
+                    col_x,
+                    col_y,
+                    seg_f,
+                    seg_x,
+                    seg_y,
+                )
+            else:
+                b_cf, b_cx, b_cy, b_sf, b_sx, b_sy = _load_book_training_sample_arrays(
+                    other_book_id
+                )
+            col_chunks.append((b_cf, b_cx, b_cy))
+            seg_chunks.append((b_sf, b_sx, b_sy))
 
-    return {
-        "book_id": book_id,
-        "column_model": column_model,
-        "segment_model": segment_model,
-        "global_column_model": global_column_model,
-        "global_segment_model": global_segment_model,
-    }
+        g_col_f, g_col_x, g_col_y = _concat_feature_arrays(col_chunks)
+        g_seg_f, g_seg_x, g_seg_y = _concat_feature_arrays(seg_chunks)
+        global_column_model = _fit_boundary_model_from_arrays(
+            GLOBAL_MODEL_BOOK_ID,
+            "column_boundary_model",
+            g_col_f,
+            g_col_x,
+            g_col_y,
+        )
+        global_segment_model = _fit_boundary_model_from_arrays(
+            GLOBAL_MODEL_BOOK_ID,
+            "segment_boundary_model",
+            g_seg_f,
+            g_seg_x,
+            g_seg_y,
+        )
+        _save_model_payload(
+            GLOBAL_MODEL_BOOK_ID, "column_boundary_model", global_column_model
+        )
+        _save_model_payload(
+            GLOBAL_MODEL_BOOK_ID, "segment_boundary_model", global_segment_model
+        )
+        _record_training_event(
+            GLOBAL_MODEL_BOOK_ID, global_column_model, global_segment_model
+        )
+
+        return {
+            "book_id": book_id,
+            "column_model": column_model,
+            "segment_model": segment_model,
+            "global_column_model": global_column_model,
+            "global_segment_model": global_segment_model,
+        }
 
 
 def _segments_from_mapping(mapping: dict[str, str], source: str) -> dict[str, object]:
@@ -2220,6 +2966,60 @@ def _estimate_segments_for_page(page_df: pd.DataFrame) -> dict[str, str]:
     return mapping
 
 
+def _rewrite_csv_replacing_page(
+    csv_path: Path,
+    page_id: str,
+    page_df: pd.DataFrame,
+    required_columns: tuple[str, ...] = (),
+) -> None:
+    """既存CSVの該当ページ行を除外し、列を揃えて新しいページ行を高速に書き込む"""
+    tmp_path = csv_path.with_suffix(".tmp")
+    with (
+        csv_path.open("r", encoding="utf-8", newline="") as src,
+        tmp_path.open("w", encoding="utf-8", newline="") as dst,
+    ):
+        reader = csv.reader(src)
+        orig_header = next(reader, [])
+        fieldnames = list(orig_header)
+        for col in page_df.columns:
+            if col not in fieldnames:
+                fieldnames.append(col)
+        for col in required_columns:
+            if col not in fieldnames:
+                fieldnames.append(col)
+
+        image_idx = orig_header.index("Image") if "Image" in orig_header else -1
+        extra_cols = len(fieldnames) - len(orig_header)
+        writer = csv.writer(dst)
+        writer.writerow(fieldnames)
+
+        if extra_cols == 0:
+            if image_idx >= 0:
+                for row in reader:
+                    if len(row) > image_idx and row[image_idx] == page_id:
+                        continue
+                    writer.writerow(row)
+            else:
+                writer.writerows(reader)
+        else:
+            pad = [""] * extra_cols
+            orig_len = len(orig_header)
+            for row in reader:
+                if image_idx >= 0 and len(row) > image_idx and row[image_idx] == page_id:
+                    continue
+                if len(row) < orig_len:
+                    writer.writerow(row + [""] * (orig_len - len(row)) + pad)
+                elif len(row) == orig_len:
+                    writer.writerow(row + pad)
+                else:
+                    writer.writerow(row[:orig_len] + pad)
+
+    page_df.reindex(columns=fieldnames).to_csv(
+        tmp_path, mode="a", index=False, header=False
+    )
+    tmp_path.replace(csv_path)
+
+
 def _update_output_seg_csv(
     book_id: str,
     page_id: str,
@@ -2250,40 +3050,24 @@ def _update_output_seg_csv(
 
     seg_df["Segment ID"] = seg_df["Column ID"].map(to_seg)
 
+    for wari_column in WARI_COLUMNS:
+        if wari_column in seg_df.columns:
+            seg_df[wari_column] = seg_df[wari_column].fillna("")
+
     if not out_csv.exists():
         seg_df.to_csv(out_csv, index=False)
         return
 
-    tmp_path = out_csv.with_suffix(".tmp")
-    with (
-        out_csv.open("r", encoding="utf-8", newline="") as src,
-        tmp_path.open("w", encoding="utf-8", newline="") as dst,
-    ):
-        reader = csv.DictReader(src)
-        fieldnames = list(reader.fieldnames or [])
-        for col in seg_df.columns:
-            if col not in fieldnames:
-                fieldnames.append(col)
-        if "Segment ID" not in fieldnames:
-            fieldnames.append("Segment ID")
-
-        writer = csv.DictWriter(dst, fieldnames=fieldnames)
-        writer.writeheader()
-        for row in reader:
-            if row.get("Image") == page_id:
-                continue
-            writer.writerow({name: row.get(name, "") for name in fieldnames})
-
-        for record in seg_df.to_dict(orient="records"):
-            writer.writerow({name: record.get(name, "") for name in fieldnames})
-
-    tmp_path.replace(out_csv)
+    _rewrite_csv_replacing_page(
+        out_csv, page_id, seg_df, required_columns=("Segment ID",)
+    )
 
 
 def generate_column_images(
     book_id: str,
     page_id: str,
     columns: list[list[str]],
+    boxes: Optional[list[Optional[ColumnBoxData]]] = None,
 ) -> None:
     columns_dir = OUTPUT_DIR / book_id / "columns"
     columns_dir.mkdir(parents=True, exist_ok=True)
@@ -2310,10 +3094,17 @@ def generate_column_images(
             if col_chars.empty:
                 continue
 
-            min_x = int(col_chars["X"].min())
-            min_y = int(col_chars["Y"].min())
-            max_x = int((col_chars["X"] + col_chars["Width"]).max())
-            max_y = int((col_chars["Y"] + col_chars["Height"]).max())
+            box = boxes[col_idx - 1] if boxes and col_idx <= len(boxes) else None
+            if box is not None:
+                min_x = box.x
+                min_y = box.y
+                max_x = box.x + box.width
+                max_y = box.y + box.height
+            else:
+                min_x = int(col_chars["X"].min())
+                min_y = int(col_chars["Y"].min())
+                max_x = int((col_chars["X"] + col_chars["Width"]).max())
+                max_y = int((col_chars["Y"] + col_chars["Height"]).max())
 
             min_x = max(0, min_x - padding)
             min_y = max(0, min_y - padding)
@@ -2325,6 +3116,90 @@ def generate_column_images(
             column_img.save(column_path, "JPEG", quality=95)
 
 
+# ===== 割注 =====
+def validate_and_renumber_wari(
+    columns: list[ColumnData], wari: list[WariAssignment]
+) -> dict[str, tuple[str, str]]:
+    """割注の割当を検証し、Wari ID をページ文字順に振り直す
+
+    戻り値は char_id -> (振り直し後の Wari ID, Wari Part)。
+    不正な割当は HTTP 400 を送出する。
+    """
+    if not wari:
+        return {}
+
+    # char_id -> (列インデックス, 列内の位置)
+    position_by_char_id: dict[str, tuple[int, int]] = {}
+    for col_idx, column in enumerate(columns):
+        for pos, char_id in enumerate(column.char_ids):
+            position_by_char_id.setdefault(char_id, (col_idx, pos))
+
+    groups: dict[str, list[WariAssignment]] = {}
+    seen_char_ids: set[str] = set()
+    for item in wari:
+        wari_id = item.wari_id.strip()
+        if not wari_id:
+            raise HTTPException(status_code=400, detail="wari_id must not be empty")
+        if item.wari_part not in WARI_PARTS:
+            raise HTTPException(
+                status_code=400,
+                detail=f"invalid wari_part: {item.wari_part} ({item.char_id})",
+            )
+        if item.char_id in seen_char_ids:
+            raise HTTPException(
+                status_code=400, detail=f"duplicate wari assignment: {item.char_id}"
+            )
+        seen_char_ids.add(item.char_id)
+        if item.char_id not in position_by_char_id:
+            raise HTTPException(
+                status_code=400,
+                detail=f"wari char is not in any column: {item.char_id}",
+            )
+        groups.setdefault(wari_id, []).append(item)
+
+    for wari_id, items in groups.items():
+        if len(items) < 2:
+            raise HTTPException(
+                status_code=400, detail=f"wari group needs 2+ chars: {wari_id}"
+            )
+        parts = {item.wari_part for item in items}
+        if parts != set(WARI_PARTS):
+            raise HTTPException(
+                status_code=400,
+                detail=f"wari group needs both right and left: {wari_id}",
+            )
+        col_indexes = {position_by_char_id[item.char_id][0] for item in items}
+        if len(col_indexes) != 1:
+            raise HTTPException(
+                status_code=400, detail=f"wari group spans multiple columns: {wari_id}"
+            )
+        ordered = sorted(items, key=lambda item: position_by_char_id[item.char_id][1])
+        seen_left = False
+        for item in ordered:
+            if item.wari_part == "left":
+                seen_left = True
+            elif seen_left:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"wari right char comes after left char: {wari_id}",
+                )
+
+    # ページの文字順で最初に現れるグループから WARI0001, WARI0002, ... を振る
+    ordered_group_ids = sorted(
+        groups,
+        key=lambda gid: min(_char_sort_key(item.char_id) for item in groups[gid]),
+    )
+    new_id_by_temp_id = {
+        temp_id: f"WARI{index:04d}"
+        for index, temp_id in enumerate(ordered_group_ids, start=1)
+    }
+    result: dict[str, tuple[str, str]] = {}
+    for temp_id, items in groups.items():
+        for item in items:
+            result[item.char_id] = (new_id_by_temp_id[temp_id], item.wari_part)
+    return result
+
+
 @app.post("/api/books/{book_id}/pages/{page_id}/save")
 async def save_annotations(
     book_id: str,
@@ -2332,36 +3207,73 @@ async def save_annotations(
     request: SaveRequest,
     background_tasks: BackgroundTasks,
 ):
-    """アノテーションを保存し、列画像を生成"""
+    """アノテーションをCSVに保存"""
     if request.book_id != book_id or request.page_id != page_id:
         raise HTTPException(status_code=400, detail="book_id/page_id mismatch")
 
+    # 割注の検証（不正なら何も書き込まずに 400）
+    wari_assignments = validate_and_renumber_wari(request.columns, request.wari)
+
     # 出力ディレクトリ作成
     output_book_dir = OUTPUT_DIR / book_id
-    columns_dir = output_book_dir / "columns"
-    columns_dir.mkdir(parents=True, exist_ok=True)
+    output_book_dir.mkdir(parents=True, exist_ok=True)
 
-    # 元の座標CSVを読み込み
-    df = load_coordinate_csv(book_id)
-    # page_idはImage列の値そのもの
+    # 元の座標CSVから対象ページだけ高速取得
     image_name = page_id
+    page_df = _load_coordinate_page_df(book_id, image_name)
 
-    # 現在のページだけに絞って処理
-    page_df = cast(pd.DataFrame, df[df["Image"] == image_name].copy())
+    # 保存時の画像範囲クランプ用に画像サイズを取得（画像がなければクランプ省略）
+    image_size: Optional[tuple[int, int]] = None
+    image_path = get_image_path(book_id, page_id)
+    if image_path.exists():
+        with Image.open(image_path) as img:
+            image_size = img.size
 
-    # Column IDを追加（既存のColumn ID列があれば更新）
-    if "Column ID" not in page_df.columns:
-        page_df["Column ID"] = None
-
-    # 現在のページのColumn IDをクリア
-    page_df.loc[:, "Column ID"] = None
-
-    # 列ごとにColumn IDを設定
+    # 列ごとにColumn IDと列ボックスを辞書で構築し、一括割り当て
+    col_id_by_char: dict[str, str] = {}
+    box_values_by_char: dict[str, tuple[int, int, int, int]] = {}
     for col_idx, column in enumerate(request.columns, start=1):
         column_id = f"COL{col_idx:04d}"
+        box = column.box
+        if box is not None and image_size is not None:
+            box = clamp_column_box(box, image_size[0], image_size[1])
+        box_tuple = (
+            (box.x, box.y, box.width, box.height) if box is not None else None
+        )
         for char_id in column.char_ids:
-            mask = page_df["Char ID"] == char_id
-            page_df.loc[mask, "Column ID"] = column_id
+            col_id_by_char[char_id] = column_id
+            if box_tuple is not None:
+                box_values_by_char[char_id] = box_tuple
+
+    char_id_series = page_df["Char ID"]
+    page_df["Column ID"] = char_id_series.map(col_id_by_char)
+
+    for idx_col, box_column in enumerate(COLUMN_BOX_COLUMNS):
+        page_df[box_column] = pd.Series(
+            [
+                box_values_by_char[cid][idx_col] if cid in box_values_by_char else None
+                for cid in char_id_series.tolist()
+            ],
+            index=page_df.index,
+            dtype=object,
+        )
+
+    page_df["Wari ID"] = pd.Series(
+        [
+            wari_assignments[cid][0] if cid in wari_assignments else None
+            for cid in char_id_series.tolist()
+        ],
+        index=page_df.index,
+        dtype=object,
+    )
+    page_df["Wari Part"] = pd.Series(
+        [
+            wari_assignments[cid][1] if cid in wari_assignments else None
+            for cid in char_id_series.tolist()
+        ],
+        index=page_df.index,
+        dtype=object,
+    )
 
     # CSVを保存
     output_csv = output_book_dir / "column_annotation.csv"
@@ -2373,59 +3285,51 @@ async def save_annotations(
         if not output_csv.exists():
             page_df.to_csv(output_csv, index=False)
         else:
-            # 新規ページなら追記のみ
-            page_df.to_csv(output_csv, mode="a", index=False, header=False)
+            with output_csv.open("r", encoding="utf-8", newline="") as f:
+                header = next(csv.reader(f), [])
+            if set(page_df.columns) <= set(header):
+                # 新規ページかつ列が揃っているなら、既存ヘッダー順で追記のみ
+                page_df.reindex(columns=header).to_csv(
+                    output_csv, mode="a", index=False, header=False
+                )
+            else:
+                # 旧形式CSV（新列なし）は追記すると列がずれるため全体を書き直す
+                _rewrite_csv_replacing_page(
+                    output_csv, image_name, page_df, required_columns=("Column ID",)
+                )
         index_path.parent.mkdir(parents=True, exist_ok=True)
         with index_path.open("a", encoding="utf-8") as f:
             f.write(f"{image_name}\n")
         page_index.add(image_name)
     else:
         # 既存ページは該当行を除外して書き換え
-        tmp_path = output_csv.with_suffix(".tmp")
-        with (
-            output_csv.open("r", encoding="utf-8", newline="") as src,
-            tmp_path.open("w", encoding="utf-8", newline="") as dst,
-        ):
-            reader = csv.DictReader(src)
-            fieldnames = list(reader.fieldnames or [])
-            for col in page_df.columns:
-                if col not in fieldnames:
-                    fieldnames.append(col)
-            if "Column ID" not in fieldnames:
-                fieldnames.append("Column ID")
+        _rewrite_csv_replacing_page(
+            output_csv, image_name, page_df, required_columns=("Column ID",)
+        )
 
-            writer = csv.DictWriter(dst, fieldnames=fieldnames)
-            writer.writeheader()
-            for row in reader:
-                if row.get("Image") == image_name:
-                    continue
-                writer.writerow({name: row.get(name, "") for name in fieldnames})
-
-        page_df.to_csv(tmp_path, mode="a", index=False, header=False)
-        tmp_path.replace(output_csv)
-
-    # 列画像はバックグラウンドで生成
-    columns_char_ids = [column.char_ids for column in request.columns]
-    background_tasks.add_task(
-        generate_column_images, book_id, page_id, columns_char_ids
-    )
     background_tasks.add_task(train_book_models, book_id)
     if request.prediction_feedback is not None:
         _record_feedback_event(book_id, request.prediction_feedback.model_dump())
 
-    # 既存のセグメント（手動編集）を可能な限り保持
-    segment_override = build_segment_override_for_page(book_id, page_id, page_df)
+    # 既存のセグメント（手動編集）を1回の読み込みで取得して可能な限り保持
+    saved_segment_df = _load_saved_page_df(
+        OUTPUT_SEG_DIR / book_id / "column_annotation.csv", page_id, "Segment ID"
+    )
+    segment_override = build_segment_override_from_saved_annotations(
+        page_df, saved_segment_df
+    )
     if not segment_override:
-        segment_override = load_existing_segment_map(book_id, page_id)
+        segment_override = _extract_segment_map_from_page_df(saved_segment_df)
     _update_output_seg_csv(
         book_id, page_id, page_df, segment_map_override=segment_override or None
     )
+    invalidate_book_caches(book_id)
 
     return {
         "success": True,
-        "message": f"保存完了: {len(request.columns)}列（列画像はバックグラウンド生成）",
+        "message": f"保存完了: {len(request.columns)}列",
         "csv_path": str(output_csv),
-        "columns_dir": str(columns_dir),
+        "columns_dir": str(output_book_dir / "columns"),
     }
 
 
@@ -2476,16 +3380,22 @@ async def save_segments(
                 continue
             seg_map[col] = seg_id
 
-    # output/{book_id}/column_annotation.csv を読み込み、該当ページを更新して output_seg に書き出す
-    df = pd.read_csv(output_csv)
-    page_df = cast(pd.DataFrame, df[df["Image"] == page_id].copy())
-    if page_df.empty:
+    # output/{book_id}/column_annotation.csv から対象ページをキャッシュ経由で取得
+    entry = _load_csv_with_page_index(output_csv)
+    if entry is None:
+        raise HTTPException(
+            status_code=400,
+            detail="column annotations not found. Save columns first.",
+        )
+    full_df, page_groups = entry
+    raw_page_df = page_groups.get(page_id)
+    if raw_page_df is None or raw_page_df.empty:
         raise HTTPException(
             status_code=404, detail=f"page not found in annotations: {page_id}"
         )
-
-    if "Column ID" not in page_df.columns:
+    if "Column ID" not in full_df.columns:
         raise HTTPException(status_code=400, detail="Column ID column not found")
+    page_df = raw_page_df.copy()
 
     page_cols = {
         str(v).strip()
@@ -2508,6 +3418,7 @@ async def save_segments(
         )
 
     _update_output_seg_csv(book_id, page_id, page_df, segment_map_override=seg_map)
+    invalidate_book_caches(book_id)
     background_tasks.add_task(train_book_models, book_id)
     if request.prediction_feedback is not None:
         _record_feedback_event(book_id, request.prediction_feedback.model_dump())
@@ -2524,11 +3435,19 @@ async def save_segments(
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(
-        "main:app",
-        host=APP_HOST,
-        port=APP_PORT,
-        reload=APP_RELOAD,
-        reload_dirs=APP_RELOAD_DIRS,
-        reload_excludes=APP_RELOAD_EXCLUDES,
-    )
+    if APP_RELOAD:
+        uvicorn.run(
+            "main:app",
+            host=APP_HOST,
+            port=APP_PORT,
+            reload=True,
+            reload_dirs=APP_RELOAD_DIRS,
+            reload_excludes=APP_RELOAD_EXCLUDES,
+        )
+    else:
+        uvicorn.run(
+            app,
+            host=APP_HOST,
+            port=APP_PORT,
+            reload=False,
+        )

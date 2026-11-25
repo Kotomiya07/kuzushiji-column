@@ -41,3 +41,7 @@ Thumbs.db
 # agent instructions
 AGENTS.md
 .opencode/
+
+# KCR import runtime data
+/kcr_import/backups/
+/kcr_import/decisions.jsonl

@@ -51,7 +51,7 @@
                     <button id="btn-next" class="pager__btn" title="次のページ (→)" aria-label="次のページ">
                         <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </button>
-                    <button id="btn-skip-next" class="pager__btn pager__btn--skip" title="保存せず次のページへスキップ">
+                    <button id="btn-skip-next" class="pager__btn pager__btn--skip" title="保存せず次のページへスキップ (Shift+→)">
                         <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3l4.5 5L3 13M8.5 3L13 8l-4.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         <span>スキップ</span>
                     </button>
@@ -63,6 +63,7 @@
             </div>
 
             <div class="topbar__actions">
+                <a href="/kcr-import" class="btn btn--outline">KCR取込</a>
                 <button id="btn-help" class="icon-btn" title="ヘルプ (H)" aria-label="ヘルプ">
                     <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.5"/><path d="M6.2 6.2a1.8 1.8 0 113 1.3c-.55.5-1.2.8-1.2 1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.3" r=".8" fill="currentColor"/></svg>
                 </button>
@@ -167,6 +168,58 @@
                             <input type="checkbox" id="preload-toggle" class="switch__input">
                             <span class="switch" aria-hidden="true"></span>
                         </label>
+                    </div>
+                </section>
+
+                <section class="inspector__section column-box-panel" id="column-box-panel">
+                    <h2 class="inspector__heading">列ボックス</h2>
+                    <p class="inspector__note">ふりがな・返り点を含めるため、列の枠を右側（+X）に広げます。枠の辺はキャンバス上でドラッグでも調整できます。</p>
+
+                    <label class="column-box-panel__field" for="column-box-extend-px">
+                        <span class="column-box-panel__label">右側に追加 (px)</span>
+                        <input type="number" id="column-box-extend-px" class="column-box-panel__input" min="1" step="1" value="40">
+                    </label>
+                    <label class="column-box-panel__field" for="column-box-extend-vertical-px">
+                        <span class="column-box-panel__label">上下に追加 (px)</span>
+                        <input type="number" id="column-box-extend-vertical-px" class="column-box-panel__input" min="0" step="1" value="0">
+                    </label>
+                    <div class="column-box-panel__actions">
+                        <button type="button" id="btn-extend-selected-column" class="btn btn--outline btn--block" title="選択列の右側を広げる (E)">選択列を広げる</button>
+                        <button type="button" id="btn-reset-selected-column-box" class="btn btn--outline btn--block" title="選択列のボックスを文字範囲の自動値に戻す" disabled>選択列を自動に戻す</button>
+                        <button type="button" id="btn-extend-all-columns" class="btn btn--outline btn--block" title="全列のボックスを広げる (G)">全列を広げる <kbd class="btn__kbd">G</kbd></button>
+                        <button type="button" id="btn-reset-column-boxes" class="btn btn--outline btn--block" title="全列のボックスを文字範囲の自動値に戻す">全列を自動に戻す</button>
+                    </div>
+
+                    <p class="column-box-panel__state" id="column-box-state">列を選択してください</p>
+                    <div class="column-box-panel__grid">
+                        <label class="column-box-panel__field" for="column-box-x">
+                            <span class="column-box-panel__label">X</span>
+                            <input type="number" id="column-box-x" class="column-box-panel__input" step="1" placeholder="auto" disabled>
+                        </label>
+                        <label class="column-box-panel__field" for="column-box-y">
+                            <span class="column-box-panel__label">Y</span>
+                            <input type="number" id="column-box-y" class="column-box-panel__input" step="1" placeholder="auto" disabled>
+                        </label>
+                        <label class="column-box-panel__field" for="column-box-width">
+                            <span class="column-box-panel__label">幅</span>
+                            <input type="number" id="column-box-width" class="column-box-panel__input" min="1" step="1" placeholder="auto" disabled>
+                        </label>
+                        <label class="column-box-panel__field" for="column-box-height">
+                            <span class="column-box-panel__label">高さ</span>
+                            <input type="number" id="column-box-height" class="column-box-panel__input" min="1" step="1" placeholder="auto" disabled>
+                        </label>
+                    </div>
+                    <button type="button" id="btn-apply-column-box" class="btn btn--outline btn--block" disabled>適用</button>
+                </section>
+
+                <section class="inspector__section wari-panel" id="wari-panel">
+                    <h2 class="inspector__heading">割注</h2>
+                    <p class="inspector__note">列内の連続した文字を範囲指定して割注にします。右側と左側は自動で振り分け、境目は手直しできます（列編集モードのみ）。</p>
+                    <p class="wari-panel__state" id="wari-state">割注なし</p>
+                    <div class="wari-panel__actions">
+                        <button type="button" id="btn-wari-range" class="btn btn--outline btn--block" title="範囲の開始/確定 (W)" disabled>範囲を開始/確定</button>
+                        <button type="button" id="btn-wari-sep" class="btn btn--outline btn--block" title="選択文字から後ろを左側にする (Shift+W)" disabled>選択文字を境目にする</button>
+                        <button type="button" id="btn-wari-remove" class="btn btn--outline btn--block" title="選択文字が属する割注を解除" disabled>選択文字の割注を解除</button>
                     </div>
                 </section>
 
@@ -307,7 +360,7 @@
             <div class="help-content">
                 <section class="help-section">
                     <h3>概要</h3>
-                    <p>日本古典籍くずし字データセットの列分割アノテーションを行うツールです。各文字のbboxを列単位でグループ化し、列画像とCSVアノテーションを出力します。</p>
+                    <p>日本古典籍くずし字データセットの列分割アノテーションを行うツールです。各文字のbboxを列単位でグループ化し、アノテーションをCSVに保存します。</p>
                 </section>
 
                 <section class="help-section">
@@ -317,7 +370,7 @@
                         <li>↓キーで列の最後の文字まで移動</li>
                         <li>次の列の先頭文字でEnterキー → 直前までが列として確定</li>
                         <li>最後の列は、最後の文字でEnterキー → 残り全部が確定</li>
-                        <li>Sキーで保存 → CSVと列画像を出力</li>
+                        <li>Sキーで保存 → アノテーションCSVを更新</li>
                     </ol>
                 </section>
 
@@ -326,6 +379,7 @@
                     <table class="help-table">
                         <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>文字選択を移動</td></tr>
                         <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>前後のページへ移動</td></tr>
+                        <tr><td><kbd>Shift</kbd> + <kbd>→</kbd></td><td>保存せず次のページへスキップ</td></tr>
                         <tr><td><kbd>Enter</kbd></td><td>列を確定（選択した文字から新しい列開始）</td></tr>
                         <tr><td><kbd>Z</kbd></td><td>元に戻す (Undo)</td></tr>
                         <tr><td><kbd>Y</kbd></td><td>やり直し (Redo)</td></tr>
@@ -335,6 +389,11 @@
                         <tr><td><kbd>N</kbd></td><td>選択文字を未分割に戻す</td></tr>
                         <tr><td><kbd>Shift</kbd> + <kbd>N</kbd></td><td>全解除（全て未分割に戻す）</td></tr>
                         <tr><td><kbd>A</kbd></td><td>Autoモード ON/OFF 切り替え</td></tr>
+                        <tr><td><kbd>E</kbd></td><td>選択列のボックスを右側に広げる（右側に追加 px 分、上下に追加 px も同時に上下へ広げる）</td></tr>
+                        <tr><td><kbd>Shift</kbd> + <kbd>E</kbd></td><td>選択列のボックスを右側から狭める（最小幅 8px。上下も同時に狭める）</td></tr>
+                        <tr><td><kbd>G</kbd></td><td>全列のボックスを広げる（右側・上下に追加 px 分）</td></tr>
+                        <tr><td><kbd>W</kbd></td><td>割注の範囲指定（1回目で開始、終了文字を選んで2回目で確定。開始文字で再実行すると取り消し）</td></tr>
+                        <tr><td><kbd>Shift</kbd> + <kbd>W</kbd></td><td>選択文字を割注の右/左の境目にする（選択文字から後ろが左）</td></tr>
                         <tr><td><kbd>Enter</kbd> (セグメント表示)</td><td>セグメントを分割（選択列の位置で分割）</td></tr>
                         <tr><td><kbd>N</kbd> (セグメント表示)</td><td>セグメントを結合（前のセグメントと結合）</td></tr>
                         <tr><td><kbd>R</kbd> (セグメント表示)</td><td>Segment ID を変更</td></tr>
@@ -348,6 +407,33 @@
                         <li><span class="legend-box legend--selected"></span>選択中の文字</li>
                         <li><span class="legend-box legend--confirmed"></span>確定済みの列（色で区別）</li>
                         <li><span class="legend-line"></span>Char ID順の重心線</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>列ボックス</h3>
+                    <p>縦書きでは、ふりがなや返り点が列の右側（+X）に付きます。列ボックスは、列の枠を文字の範囲より広げて、これらを含めるための設定です。</p>
+                    <ul>
+                        <li>キャンバス上で、全列の右辺・上辺・下辺と、選択中の列の左辺をドラッグしてサイズを変えられます（最小 8px）。</li>
+                        <li>右パネルの「列ボックス」で「右側に追加 (px)」と「上下に追加 (px)」（既定 0。上へ・下へ各px）を指定し、「選択列を広げる」または「全列を広げる」（<kbd>G</kbd>）で一括して広げられます。</li>
+                        <li>「選択列を自動に戻す」は、選択中の列だけを文字範囲に基づく自動値に戻します（すでに自動の列では押せません）。</li>
+                        <li>「全列を自動に戻す」は、調整した枠をすべて文字範囲に基づく自動値に戻します。</li>
+                        <li>列を確定（<kbd>Enter</kbd> / 列確定）すると、新しくできた列には現在の px 設定（右側・上下）が自動で適用されます。既存の列を途中で分割したときの2列も同様です。両方の px が 0 のときは広げません。</li>
+                        <li>ボックスが1つも調整されていないページでは、読み込み時に現在の px 設定で自動的に全列を広げます。そのまま何も編集せずに次ページへ進むと、自動で保存されます。</li>
+                        <li>X / Y / 幅 / 高さを入力して「適用」すると、数値で指定できます。未調整の列は「自動」（文字範囲）です。</li>
+                        <li>操作は Z / Y で元に戻せます。保存すると CSV に Column X / Y / Width / Height が出力されます。</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>割注</h3>
+                    <p>割注は、本文の行の中で二行に割って小さく書かれた注です。右側の行（right）を先に、左側の行（left）を後に読みます。</p>
+                    <ul>
+                        <li>割注の最初の文字を選んで <kbd>W</kbd>（または「範囲を開始/確定」）、最後の文字を選んでもう一度 <kbd>W</kbd> を押すと範囲が確定します。同じ列の連続した2文字以上が対象です。</li>
+                        <li>右/左は文字のX位置から自動で振り分けます。違う場合は、左側の先頭にしたい文字を選んで <kbd>Shift</kbd> + <kbd>W</kbd>（「選択文字を境目にする」）で直せます。</li>
+                        <li>「選択文字の割注を解除」で、その文字が属する割注全体を解除します。</li>
+                        <li>列を分割したり、文字を未分割に戻したりして、割注が列をまたぐ場合は、その割注は自動的に解除されます。</li>
+                        <li>操作は列編集モードでのみ行えます。Z / Y で元に戻せます。保存すると CSV に Wari ID / Wari Part が出力されます。</li>
                     </ul>
                 </section>
 
@@ -375,7 +461,7 @@
                     <ul>
                         <li><code>output/{book_id}/column_annotation.csv</code> - 列アノテーションCSV</li>
                         <li><code>output_seg/{book_id}/column_annotation.csv</code> - セグメントアノテーションCSV（Segment ID追加）</li>
-                        <li><code>output/{book_id}/columns/{page_id}_col0001.jpg</code> - 列画像</li>
+                        <li><code>output/{book_id}/columns/{page_id}_col0001.jpg</code> - 生成済みの列画像（保存時に生成・更新しません）</li>
                     </ul>
                 </section>
             </div>
@@ -383,6 +469,6 @@
     </dialog>
 
     <script src="/static/annotation_colors.js?v=5"></script>
-    <script src="/static/app.js?v=14"></script>
+    <script src="/static/app.js?v=24"></script>
 </body>
 </html>
